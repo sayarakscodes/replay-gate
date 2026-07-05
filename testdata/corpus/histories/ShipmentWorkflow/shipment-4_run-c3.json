@@ -1,0 +1,41 @@
+{
+  "events": [
+    {
+      "eventId": "1",
+      "eventTime": "2026-06-01T12:00:00Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED",
+      "workflowExecutionStartedEventAttributes": {
+        "workflowType": {
+          "name": "ShipmentWorkflow"
+        },
+        "taskQueue": {
+          "name": "shipping-tq"
+        },
+        "input": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "eyJzaGlwbWVudElkIjoic2gtNCJ9"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eventId": "2",
+      "eventTime": "2026-06-01T12:00:01Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "activityTaskScheduledEventAttributes": {
+        "activityId": "1",
+        "activityType": {
+          "name": "ReserveInventory"
+        },
+        "taskQueue": {
+          "name": "shipping-tq"
+        }
+      }
+    }
+  ]
+}

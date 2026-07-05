@@ -1,3 +1,11 @@
 module github.com/sayarakscodes/replay-gate
 
 go 1.26.3
+
+require (
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/spf13/cobra v1.10.2 // indirect
+	github.com/spf13/pflag v1.0.9 // indirect
+	go.temporal.io/api v1.63.1 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
+)

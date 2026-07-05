@@ -1,0 +1,42 @@
+{
+  "corpusVersion": "sha256:5360943b0d2857eaa638bd9f9bcb3e494ae5fcc8710a3d3649b49de7074f77da",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-05T00:00:00Z",
+  "cluster": {
+    "namespace": "demo",
+    "endpoint": "local-fixture"
+  },
+  "sdkVersionAtSampling": "hand-built-fixture",
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/SimpleOrder/order-1_run-a1.json",
+      "workflowType": "SimpleOrder",
+      "workflowID": "order-1",
+      "runID": "run-a1",
+      "status": "COMPLETED",
+      "eventCount": 4,
+      "sha256": "319d705211e4521f682073df556cb21df4d737eb0c8a4f019e1cc0212de6d66d"
+    },
+    {
+      "file": "histories/InvoiceFlow/invoice-9_run-b2.json",
+      "workflowType": "InvoiceFlow",
+      "workflowID": "invoice-9",
+      "runID": "run-b2",
+      "status": "COMPLETED",
+      "eventCount": 6,
+      "sha256": "d5217a6bfbf0a6c19a0c971d6dc2d92524febdcb7bc3cec678d56ea37cf5c0ef"
+    },
+    {
+      "file": "histories/ShipmentWorkflow/shipment-4_run-c3.json",
+      "workflowType": "ShipmentWorkflow",
+      "workflowID": "shipment-4",
+      "runID": "run-c3",
+      "status": "RUNNING",
+      "eventCount": 2,
+      "sha256": "b0932ca3f9ee5be5de38979a8df355d7f309cab000e756e3bbabd78d50a135bf"
+    }
+  ]
+}

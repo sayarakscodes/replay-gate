@@ -1,0 +1,77 @@
+{
+  "events": [
+    {
+      "eventId": "1",
+      "eventTime": "2026-06-01T12:00:00Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED",
+      "workflowExecutionStartedEventAttributes": {
+        "workflowType": {
+          "name": "InvoiceFlow"
+        },
+        "taskQueue": {
+          "name": "billing-tq"
+        },
+        "input": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "eyJpbnZvaWNlSWQiOiJpbnYtOSJ9"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eventId": "2",
+      "eventTime": "2026-06-01T12:00:01Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "activityTaskScheduledEventAttributes": {
+        "activityId": "1",
+        "activityType": {
+          "name": "ValidateInvoice"
+        },
+        "taskQueue": {
+          "name": "billing-tq"
+        }
+      }
+    },
+    {
+      "eventId": "3",
+      "eventTime": "2026-06-01T12:00:02Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
+      "activityTaskCompletedEventAttributes": {
+        "scheduledEventId": "2"
+      }
+    },
+    {
+      "eventId": "4",
+      "eventTime": "2026-06-01T12:00:03Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "activityTaskScheduledEventAttributes": {
+        "activityId": "2",
+        "activityType": {
+          "name": "SendInvoiceEmail"
+        },
+        "taskQueue": {
+          "name": "billing-tq"
+        }
+      }
+    },
+    {
+      "eventId": "5",
+      "eventTime": "2026-06-01T12:00:04Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
+      "activityTaskCompletedEventAttributes": {
+        "scheduledEventId": "4"
+      }
+    },
+    {
+      "eventId": "6",
+      "eventTime": "2026-06-01T12:00:05Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED",
+      "workflowExecutionCompletedEventAttributes": {}
+    }
+  ]
+}

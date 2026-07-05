@@ -24,7 +24,7 @@ func matchingSimpleOrder(ctx workflow.Context) error {
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
 		StartToCloseTimeout: time.Minute,
 	})
-	var result interface{}
+	var result any
 	return workflow.ExecuteActivity(ctx, "ChargeCard", nil).Get(ctx, &result)
 }
 

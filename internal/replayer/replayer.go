@@ -4,6 +4,7 @@ package replayer
 
 import (
 	"fmt"
+	"strings"
 
 	historypb "go.temporal.io/api/history/v1"
 	"go.temporal.io/sdk/log"
@@ -14,7 +15,7 @@ import (
 // Registration is a workflow function to register on a replayer, optionally
 // under an explicit name (mirrors worker.RegisterWorkflow/RegisterWorkflowWithOptions).
 type Registration struct {
-	Fn   interface{}
+	Fn   any
 	Name string
 }
 
@@ -54,4 +55,17 @@ func ReplayOne(registrations []Registration, logger log.Logger, history *history
 	r := newReplayer(registrations)
 	err := r.ReplayWorkflowHistory(logger, history)
 	return Result{Err: err}
+}
+
+// unregisteredWorkflowTypeMarker is the substring the Go SDK's worker uses when a
+// replayed history references a workflow type with no matching registration
+// (internal_worker.go: "unable to find workflow type: %v. Supported types: [%v]").
+const unregisteredWorkflowTypeMarker = "unable to find workflow type:"
+
+// IsUnregisteredWorkflowType reports whether err is the SDK's error for a corpus
+// entry whose workflow type has no matching registration, as opposed to a genuine
+// replay divergence. Callers use this to implement --on-unregistered semantics
+// (TRD §9) before the full differ (a later milestone) takes over classification.
+func IsUnregisteredWorkflowType(err error) bool {
+	return err != nil && strings.Contains(err.Error(), unregisteredWorkflowTypeMarker)
 }

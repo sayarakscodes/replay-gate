@@ -36,12 +36,12 @@ func New(cfg Config) *Gate {
 }
 
 // RegisterWorkflow registers a workflow function under its default (inferred) name.
-func (g *Gate) RegisterWorkflow(fn interface{}) {
+func (g *Gate) RegisterWorkflow(fn any) {
 	g.registrations = append(g.registrations, replayer.Registration{Fn: fn})
 }
 
 // RegisterWorkflowWithOptions registers a workflow function under an explicit name.
-func (g *Gate) RegisterWorkflowWithOptions(fn interface{}, options workflow.RegisterOptions) {
+func (g *Gate) RegisterWorkflowWithOptions(fn any, options workflow.RegisterOptions) {
 	g.registrations = append(g.registrations, replayer.Registration{Fn: fn, Name: options.Name})
 }
 

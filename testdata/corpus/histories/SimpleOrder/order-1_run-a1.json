@@ -1,85 +1,140 @@
 {
-  "events": [
+  "events":  [
     {
-      "eventId": "1",
-      "eventTime": "2026-06-01T12:00:00Z",
-      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED",
-      "workflowExecutionStartedEventAttributes": {
-        "workflowType": {
-          "name": "SimpleOrder"
+      "eventId":  "1",
+      "eventTime":  "2026-06-01T12:00:01Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED",
+      "workflowExecutionStartedEventAttributes":  {
+        "workflowType":  {
+          "name":  "SimpleOrder"
         },
-        "taskQueue": {
-          "name": "orders-tq"
+        "taskQueue":  {
+          "name":  "replaygate-fixtures-tq"
         },
-        "input": {
-          "payloads": [
+        "input":  {
+          "payloads":  [
             {
-              "metadata": {
-                "encoding": "anNvbi9wbGFpbg=="
+              "metadata":  {
+                "encoding":  "anNvbi9wbGFpbg=="
               },
-              "data": "eyJvcmRlcklkIjoiby0xIn0="
+              "data":  "eyJvcmRlcklkIjoiby0xIn0="
             }
           ]
         }
       }
     },
     {
-      "eventId": "2",
-      "eventTime": "2026-06-01T12:00:01Z",
-      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
-      "activityTaskScheduledEventAttributes": {
-        "activityId": "1",
-        "activityType": {
-          "name": "ChargeCard"
+      "eventId":  "2",
+      "eventTime":  "2026-06-01T12:00:02Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "workflowTaskScheduledEventAttributes":  {
+        "taskQueue":  {
+          "name":  "replaygate-fixtures-tq"
+        }
+      }
+    },
+    {
+      "eventId":  "3",
+      "eventTime":  "2026-06-01T12:00:03Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "workflowTaskStartedEventAttributes":  {
+        "scheduledEventId":  "2"
+      }
+    },
+    {
+      "eventId":  "4",
+      "eventTime":  "2026-06-01T12:00:04Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "workflowTaskCompletedEventAttributes":  {
+        "scheduledEventId":  "2",
+        "startedEventId":  "3"
+      }
+    },
+    {
+      "eventId":  "5",
+      "eventTime":  "2026-06-01T12:00:05Z",
+      "eventType":  "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "activityTaskScheduledEventAttributes":  {
+        "activityId":  "5",
+        "activityType":  {
+          "name":  "ChargeCard"
         },
-        "taskQueue": {
-          "name": "orders-tq"
+        "taskQueue":  {
+          "name":  "replaygate-fixtures-tq"
         },
-        "input": {
-          "payloads": [
+        "input":  {
+          "payloads":  [
             {
-              "metadata": {
-                "encoding": "anNvbi9wbGFpbg=="
+              "metadata":  {
+                "encoding":  "anNvbi9wbGFpbg=="
               },
-              "data": "eyJhbW91bnQiOjQyfQ=="
+              "data":  "eyJhbW91bnQiOjQyfQ=="
             }
           ]
         }
       }
     },
     {
-      "eventId": "3",
-      "eventTime": "2026-06-01T12:00:02Z",
-      "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
-      "activityTaskCompletedEventAttributes": {
-        "result": {
-          "payloads": [
+      "eventId":  "6",
+      "eventTime":  "2026-06-01T12:00:06Z",
+      "eventType":  "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
+      "activityTaskCompletedEventAttributes":  {
+        "result":  {
+          "payloads":  [
             {
-              "metadata": {
-                "encoding": "anNvbi9wbGFpbg=="
+              "metadata":  {
+                "encoding":  "anNvbi9wbGFpbg=="
               },
-              "data": "eyJjaGFyZ2VkIjp0cnVlfQ=="
+              "data":  "eyJjaGFyZ2VkIjp0cnVlfQ=="
             }
           ]
         },
-        "scheduledEventId": "2"
+        "scheduledEventId":  "5"
       }
     },
     {
-      "eventId": "4",
-      "eventTime": "2026-06-01T12:00:03Z",
-      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED",
-      "workflowExecutionCompletedEventAttributes": {
-        "result": {
-          "payloads": [
+      "eventId":  "7",
+      "eventTime":  "2026-06-01T12:00:07Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "workflowTaskScheduledEventAttributes":  {
+        "taskQueue":  {
+          "name":  "replaygate-fixtures-tq"
+        }
+      }
+    },
+    {
+      "eventId":  "8",
+      "eventTime":  "2026-06-01T12:00:08Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "workflowTaskStartedEventAttributes":  {
+        "scheduledEventId":  "7"
+      }
+    },
+    {
+      "eventId":  "9",
+      "eventTime":  "2026-06-01T12:00:09Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "workflowTaskCompletedEventAttributes":  {
+        "scheduledEventId":  "7",
+        "startedEventId":  "8"
+      }
+    },
+    {
+      "eventId":  "10",
+      "eventTime":  "2026-06-01T12:00:10Z",
+      "eventType":  "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED",
+      "workflowExecutionCompletedEventAttributes":  {
+        "result":  {
+          "payloads":  [
             {
-              "metadata": {
-                "encoding": "anNvbi9wbGFpbg=="
+              "metadata":  {
+                "encoding":  "anNvbi9wbGFpbg=="
               },
-              "data": "eyJzdGF0dXMiOiJkb25lIn0="
+              "data":  "eyJzdGF0dXMiOiJkb25lIn0="
             }
           ]
-        }
+        },
+        "workflowTaskCompletedEventId":  "9"
       }
     }
   ]

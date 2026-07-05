@@ -1,5 +1,5 @@
 {
-  "corpusVersion": "sha256:5360943b0d2857eaa638bd9f9bcb3e494ae5fcc8710a3d3649b49de7074f77da",
+  "corpusVersion": "sha256:24462cb3bfb00c66b0c352de600b9936a394f8dfa1cd344199a1e836bbae8895",
   "formatVersion": 1,
   "sampledAt": "2026-07-05T00:00:00Z",
   "cluster": {
@@ -17,8 +17,8 @@
       "workflowID": "order-1",
       "runID": "run-a1",
       "status": "COMPLETED",
-      "eventCount": 4,
-      "sha256": "319d705211e4521f682073df556cb21df4d737eb0c8a4f019e1cc0212de6d66d"
+      "eventCount": 10,
+      "sha256": "143459e7966a94b118c867038bb9fa4727bdb01eb69c507cead35ed2e8bd9e8e"
     },
     {
       "file": "histories/InvoiceFlow/invoice-9_run-b2.json",
@@ -26,8 +26,8 @@
       "workflowID": "invoice-9",
       "runID": "run-b2",
       "status": "COMPLETED",
-      "eventCount": 6,
-      "sha256": "d5217a6bfbf0a6c19a0c971d6dc2d92524febdcb7bc3cec678d56ea37cf5c0ef"
+      "eventCount": 15,
+      "sha256": "43d8fa1f881977c88ce0447723d72f3b6e81c5b1fa68b6a9a2e38a5ebf199c98"
     },
     {
       "file": "histories/ShipmentWorkflow/shipment-4_run-c3.json",
@@ -35,8 +35,8 @@
       "workflowID": "shipment-4",
       "runID": "run-c3",
       "status": "RUNNING",
-      "eventCount": 2,
-      "sha256": "b0932ca3f9ee5be5de38979a8df355d7f309cab000e756e3bbabd78d50a135bf"
+      "eventCount": 5,
+      "sha256": "aaf1943653d10d558652861dd5a7db793cb9487e85a62d10b5cbb8b5251ee1dd"
     }
   ]
 }

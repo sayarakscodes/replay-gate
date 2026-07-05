@@ -52,8 +52,8 @@ func TestLoad_Valid(t *testing.T) {
 	if !ok {
 		t.Fatalf("missing history for %s", ref)
 	}
-	if len(hist.Events) != 4 {
-		t.Fatalf("expected 4 events for %s, got %d", ref, len(hist.Events))
+	if len(hist.Events) != 10 {
+		t.Fatalf("expected 10 events for %s, got %d", ref, len(hist.Events))
 	}
 }
 

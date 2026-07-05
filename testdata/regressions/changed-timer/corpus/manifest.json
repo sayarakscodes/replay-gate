@@ -1,0 +1,23 @@
+{
+  "corpusVersion": "sha256:578c3c4842e89f3357e3f7f79ec2fc20cfb7a73d93b71d56990d7b2b9068010c",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-05T16:57:56.650534Z",
+  "cluster": {
+    "namespace": "default",
+    "endpoint": "127.0.0.1:7233 (local dev server)"
+  },
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/ChangedTimer/regression-regressions-changed-timer_019f3337-10c6-74b7-a52c-86297f351279.json",
+      "workflowType": "ChangedTimer",
+      "workflowID": "regression-regressions-changed-timer",
+      "runID": "019f3337-10c6-74b7-a52c-86297f351279",
+      "status": "COMPLETED",
+      "eventCount": 16,
+      "sha256": "36a03b4a325c6faa0791ba3def4eb1720accf20a500f79902560dcd41e77b1db"
+    }
+  ]
+}

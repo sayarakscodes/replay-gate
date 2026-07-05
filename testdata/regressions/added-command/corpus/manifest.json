@@ -1,0 +1,23 @@
+{
+  "corpusVersion": "sha256:9df186e6192f6b9a1982aa226d5cbe8b05e609a525cc5db03fbec867e86eb0f2",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-05T16:57:56.677641Z",
+  "cluster": {
+    "namespace": "default",
+    "endpoint": "127.0.0.1:7233 (local dev server)"
+  },
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/AddedCommand/regression-regressions-added-command_019f3337-18bb-7d75-aba4-504be2ea90e0.json",
+      "workflowType": "AddedCommand",
+      "workflowID": "regression-regressions-added-command",
+      "runID": "019f3337-18bb-7d75-aba4-504be2ea90e0",
+      "status": "COMPLETED",
+      "eventCount": 11,
+      "sha256": "d557b0b6dfd12e0c9521418a89525f5eba9d273d2667fd43a575053e187d3f1d"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "corpusVersion": "sha256:d14c7b0cbf5fbedf5d16bbfa90405b0e6a2cba22ae403ad4bf2d7f1ff3bd0e39",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-05T16:57:56.690507Z",
+  "cluster": {
+    "namespace": "default",
+    "endpoint": "127.0.0.1:7233 (local dev server)"
+  },
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/TimeNowRegression/regression-regressions-time-now_019f3337-18c6-7b79-a9ca-0f5b68d573d2.json",
+      "workflowType": "TimeNowRegression",
+      "workflowID": "regression-regressions-time-now",
+      "runID": "019f3337-18c6-7b79-a9ca-0f5b68d573d2",
+      "status": "COMPLETED",
+      "eventCount": 11,
+      "sha256": "4b4287bb1fb2ae9e55d67f2c72e1c20cf72263b4678b73d344899f3fa42abed4"
+    }
+  ]
+}

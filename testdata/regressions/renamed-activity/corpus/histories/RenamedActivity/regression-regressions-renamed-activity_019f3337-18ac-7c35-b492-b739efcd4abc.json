@@ -1,0 +1,199 @@
+{
+  "events": [
+    {
+      "eventId": "1",
+      "eventTime": "2026-07-05T16:57:56.652801Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_STARTED",
+      "taskId": "1048731",
+      "workflowExecutionStartedEventAttributes": {
+        "workflowType": {
+          "name": "RenamedActivity"
+        },
+        "taskQueue": {
+          "name": "regressions-renamed-activity",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "workflowExecutionTimeout": "0s",
+        "workflowRunTimeout": "0s",
+        "workflowTaskTimeout": "10s",
+        "originalExecutionRunId": "019f3337-18ac-7c35-b492-b739efcd4abc",
+        "identity": "70137@Sayams-MacBook-Air.local@",
+        "firstExecutionRunId": "019f3337-18ac-7c35-b492-b739efcd4abc",
+        "attempt": 1,
+        "firstWorkflowTaskBackoff": "0s",
+        "header": {},
+        "workflowId": "regression-regressions-renamed-activity"
+      }
+    },
+    {
+      "eventId": "2",
+      "eventTime": "2026-07-05T16:57:56.652848Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "taskId": "1048732",
+      "workflowTaskScheduledEventAttributes": {
+        "taskQueue": {
+          "name": "regressions-renamed-activity",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "3",
+      "eventTime": "2026-07-05T16:57:56.656549Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "taskId": "1048737",
+      "workflowTaskStartedEventAttributes": {
+        "scheduledEventId": "2",
+        "identity": "70137@Sayams-MacBook-Air.local@",
+        "requestId": "0d8808e9-2c16-47db-bb81-986d65531845",
+        "historySizeBytes": "316",
+        "workerVersion": {
+          "buildId": "f5019477fd2d240ecb3da9fe31ae1064"
+        }
+      }
+    },
+    {
+      "eventId": "4",
+      "eventTime": "2026-07-05T16:57:56.659211Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "taskId": "1048741",
+      "workflowTaskCompletedEventAttributes": {
+        "scheduledEventId": "2",
+        "startedEventId": "3",
+        "identity": "70137@Sayams-MacBook-Air.local@",
+        "workerVersion": {
+          "buildId": "f5019477fd2d240ecb3da9fe31ae1064"
+        },
+        "sdkMetadata": {
+          "langUsedFlags": [
+            3
+          ],
+          "sdkName": "temporal-go",
+          "sdkVersion": "1.45.0"
+        },
+        "meteringMetadata": {}
+      }
+    },
+    {
+      "eventId": "5",
+      "eventTime": "2026-07-05T16:57:56.659255Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_SCHEDULED",
+      "taskId": "1048742",
+      "activityTaskScheduledEventAttributes": {
+        "activityId": "5",
+        "activityType": {
+          "name": "SendNotification"
+        },
+        "taskQueue": {
+          "name": "regressions-renamed-activity",
+          "kind": "TASK_QUEUE_KIND_NORMAL"
+        },
+        "header": {},
+        "scheduleToCloseTimeout": "0s",
+        "scheduleToStartTimeout": "0s",
+        "startToCloseTimeout": "30s",
+        "heartbeatTimeout": "0s",
+        "workflowTaskCompletedEventId": "4",
+        "retryPolicy": {
+          "initialInterval": "1s",
+          "backoffCoefficient": 2,
+          "maximumInterval": "100s"
+        },
+        "useWorkflowBuildId": true
+      }
+    },
+    {
+      "eventId": "6",
+      "eventTime": "2026-07-05T16:57:56.660220Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_STARTED",
+      "taskId": "1048748",
+      "activityTaskStartedEventAttributes": {
+        "scheduledEventId": "5",
+        "identity": "70137@Sayams-MacBook-Air.local@",
+        "requestId": "f1728bc0-dcd9-402e-af7c-574ba569142c",
+        "attempt": 1,
+        "workerVersion": {
+          "buildId": "f5019477fd2d240ecb3da9fe31ae1064"
+        }
+      }
+    },
+    {
+      "eventId": "7",
+      "eventTime": "2026-07-05T16:57:56.662164Z",
+      "eventType": "EVENT_TYPE_ACTIVITY_TASK_COMPLETED",
+      "taskId": "1048749",
+      "activityTaskCompletedEventAttributes": {
+        "result": {
+          "payloads": [
+            {
+              "metadata": {
+                "encoding": "anNvbi9wbGFpbg=="
+              },
+              "data": "InNlbnQi"
+            }
+          ]
+        },
+        "scheduledEventId": "5",
+        "startedEventId": "6",
+        "identity": "70137@Sayams-MacBook-Air.local@"
+      }
+    },
+    {
+      "eventId": "8",
+      "eventTime": "2026-07-05T16:57:56.662170Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_SCHEDULED",
+      "taskId": "1048750",
+      "workflowTaskScheduledEventAttributes": {
+        "taskQueue": {
+          "name": "Sayams-MacBook-Air.local:0f3547b5-4f2f-4f73-ae00-860016dded07",
+          "kind": "TASK_QUEUE_KIND_STICKY",
+          "normalName": "regressions-renamed-activity"
+        },
+        "startToCloseTimeout": "10s",
+        "attempt": 1
+      }
+    },
+    {
+      "eventId": "9",
+      "eventTime": "2026-07-05T16:57:56.662830Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_STARTED",
+      "taskId": "1048754",
+      "workflowTaskStartedEventAttributes": {
+        "scheduledEventId": "8",
+        "identity": "70137@Sayams-MacBook-Air.local@",
+        "requestId": "eee1a403-ce6f-47ed-b5f7-4eaa0197d745",
+        "historySizeBytes": "1068",
+        "workerVersion": {
+          "buildId": "f5019477fd2d240ecb3da9fe31ae1064"
+        }
+      }
+    },
+    {
+      "eventId": "10",
+      "eventTime": "2026-07-05T16:57:56.664160Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_TASK_COMPLETED",
+      "taskId": "1048758",
+      "workflowTaskCompletedEventAttributes": {
+        "scheduledEventId": "8",
+        "startedEventId": "9",
+        "identity": "70137@Sayams-MacBook-Air.local@",
+        "workerVersion": {
+          "buildId": "f5019477fd2d240ecb3da9fe31ae1064"
+        },
+        "sdkMetadata": {},
+        "meteringMetadata": {}
+      }
+    },
+    {
+      "eventId": "11",
+      "eventTime": "2026-07-05T16:57:56.664179Z",
+      "eventType": "EVENT_TYPE_WORKFLOW_EXECUTION_COMPLETED",
+      "taskId": "1048759",
+      "workflowExecutionCompletedEventAttributes": {
+        "workflowTaskCompletedEventId": "10"
+      }
+    }
+  ]
+}

@@ -5,6 +5,8 @@ package gate
 
 import (
 	"fmt"
+	"log/slog"
+	"os"
 
 	"go.temporal.io/sdk/log"
 	"go.temporal.io/sdk/workflow"
@@ -20,7 +22,9 @@ type Config struct {
 	// CorpusDir is the path to a corpus directory as produced by `replaygate sample`
 	// or hand-built per TRD §5.2.
 	CorpusDir string
-	// Logger is optional; defaults to the SDK's noop logger if unset.
+	// Logger is optional; defaults to a stderr logger if unset. This matters
+	// beyond cosmetics: the SDK's own default logger writes to os.Stdout,
+	// which would corrupt a "json" report also written to stdout.
 	Logger log.Logger
 }
 
@@ -32,6 +36,9 @@ type Gate struct {
 }
 
 func New(cfg Config) *Gate {
+	if cfg.Logger == nil {
+		cfg.Logger = log.NewStructuredLogger(slog.New(slog.NewTextHandler(os.Stderr, nil)))
+	}
 	return &Gate{cfg: cfg}
 }
 

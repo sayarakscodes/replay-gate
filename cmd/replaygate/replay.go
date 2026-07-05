@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 
 	"github.com/sayarakscodes/replay-gate/pkg/gate"
@@ -30,8 +31,17 @@ func newReplayCmd() *cobra.Command {
 				os.Exit(gate.ExitOperationalError)
 			}
 
+			// go run treats a bare relative path as an import-path lookup (and
+			// specially excludes "testdata" directories from those), so resolve
+			// to an absolute path to make this a directory reference instead.
+			absRegistrations, err := filepath.Abs(registrations)
+			if err != nil {
+				fmt.Fprintf(cmd.ErrOrStderr(), "Error: resolving --registrations path: %v\n", err)
+				os.Exit(gate.ExitOperationalError)
+			}
+
 			goArgs := []string{
-				"run", registrations,
+				"run", absRegistrations,
 				"--corpus", corpusDir,
 				"--format", format,
 				"--on-unregistered", onUnregistered,

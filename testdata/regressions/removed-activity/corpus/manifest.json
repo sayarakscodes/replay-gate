@@ -1,0 +1,23 @@
+{
+  "corpusVersion": "sha256:c816137b3d933644860a54f6ab59068c7112f5aee83560483f4a722b041207b7",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-05T16:57:54.629303Z",
+  "cluster": {
+    "namespace": "default",
+    "endpoint": "127.0.0.1:7233 (local dev server)"
+  },
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/RemovedActivity/regression-regressions-removed-activity_019f3337-10ba-72a7-9365-28ea1ec10be6.json",
+      "workflowType": "RemovedActivity",
+      "workflowID": "regression-regressions-removed-activity",
+      "runID": "019f3337-10ba-72a7-9365-28ea1ec10be6",
+      "status": "COMPLETED",
+      "eventCount": 17,
+      "sha256": "176b434ff5243aaaccc3de799be8a4dcca2414cf267a0d41824aee28598ae4c9"
+    }
+  ]
+}

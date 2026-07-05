@@ -1,0 +1,23 @@
+{
+  "corpusVersion": "sha256:dffe478bfa2b8cfa15b4d1009bef3b4a1ae609a05affe9a542d0ff391d27b922",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-05T16:57:56.666705Z",
+  "cluster": {
+    "namespace": "default",
+    "endpoint": "127.0.0.1:7233 (local dev server)"
+  },
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/RenamedActivity/regression-regressions-renamed-activity_019f3337-18ac-7c35-b492-b739efcd4abc.json",
+      "workflowType": "RenamedActivity",
+      "workflowID": "regression-regressions-renamed-activity",
+      "runID": "019f3337-18ac-7c35-b492-b739efcd4abc",
+      "status": "COMPLETED",
+      "eventCount": 11,
+      "sha256": "11c4c4ff918e00dad69e501d06b63e8b15a694123be2ac8881d13d463a70f048"
+    }
+  ]
+}

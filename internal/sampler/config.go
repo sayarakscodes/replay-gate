@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"gopkg.in/yaml.v3"
+
+	"github.com/sayarakscodes/replay-gate/internal/redact"
 )
 
 // Config mirrors the `sample:` section of replaygate.yaml (TRD §6). Zero
@@ -18,6 +20,12 @@ type Config struct {
 	ClosedWindow    time.Duration `yaml:"closedWindow"`
 	MaxEvents       int           `yaml:"maxEvents"`
 	RateLimit       RateLimit     `yaml:"rateLimit"`
+	// Redaction names the payload-scrubbing profile: "none", "default", or
+	// "hash" (TRD §5.3, §6). The "hash" profile also needs a key, which is
+	// deliberately not part of this file-loadable config — see dial.go's
+	// sibling, REPLAYGATE_REDACTION_KEY, so a secret never has to live in
+	// a checked-in replaygate.yaml.
+	Redaction string `yaml:"redaction"`
 	// TypeScanLimit bounds how many executions the workflow-type discovery
 	// scan will page through before giving up (TRD doesn't specify this
 	// explicitly; without a bound, discovery on a large namespace never
@@ -41,6 +49,7 @@ func defaultConfig() Config {
 		ClosedWindow:    7 * 24 * time.Hour,
 		MaxEvents:       10000,
 		RateLimit:       RateLimit{VisibilityRPS: 5, HistoryRPS: 10},
+		Redaction:       redact.ProfileDefault,
 		TypeScanLimit:   1000,
 	}
 }

@@ -74,7 +74,7 @@ func TestSampler_RoundTrip(t *testing.T) {
 		RateLimit:       sampler.RateLimit{VisibilityRPS: 50, HistoryRPS: 50},
 		TypeScanLimit:   1000,
 	}
-	s := sampler.New(c, "default", cfg, nil)
+	s := sampler.New(c, "default", cfg, nil, nil)
 
 	dir := t.TempDir()
 	result, err := s.Run(ctx, dir)

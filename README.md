@@ -45,6 +45,7 @@ workflow histories as a corpus, in the same format `verify`/`replay` consume.
 | `TEMPORAL_API_KEY` | API key auth (optional; enables TLS automatically) |
 | `TEMPORAL_TLS_CERT` / `TEMPORAL_TLS_KEY` | mTLS client cert/key (optional, used if no API key) |
 | `TEMPORAL_TLS_CA` | Additional CA bundle for TLS (optional) |
+| `REPLAYGATE_REDACTION_KEY` | HMAC key, only required for `--redaction hash` |
 
 ```
 export TEMPORAL_ADDRESS=127.0.0.1:7233
@@ -52,6 +53,26 @@ export TEMPORAL_NAMESPACE=default
 
 replaygate sample --out ./corpus --cap 200 --closed-window 168h
 ```
+
+#### Redaction
+
+Sampled histories can contain PII in activity/workflow/signal payloads, so
+every payload byte is scrubbed *before* it's written to disk — there is no
+code path that persists an unredacted payload except the explicit opt-out
+below. Select a profile with `--redaction` (default: `default`):
+
+| Profile | Behavior |
+|---|---|
+| `default` | Blanks payload data (same length, zeroed) while keeping metadata like `encoding` — replay only needs command/event shape, never content |
+| `hash` | Replaces payload data with an HMAC-SHA256 (keyed by `REPLAYGATE_REDACTION_KEY`) — preserves whether two payloads are equal/different (useful for detecting input-shape-change regressions) without exposing content |
+| `none` | Passes payloads through unmodified. Prints a loud warning; only use this for a corpus you know contains no sensitive data |
+
+The applied profile is recorded in the corpus manifest's `redaction.profile`
+field, so anyone inspecting a corpus can see what was (or wasn't) scrubbed.
+Redaction applies uniformly across every payload-bearing field in a history —
+activity/workflow/signal inputs and results, headers, memos — via a generic
+walk over the event tree (`internal/redact`), not a hardcoded list of known
+fields, so newly-added Temporal event types are covered automatically.
 
 Flags (`--cap`, `--max-events`, `--open-closed-split`, `--closed-window`,
 `--visibility-rps`, `--history-rps`, `--type-scan-limit`) override the

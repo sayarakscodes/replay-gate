@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"os"
 	"time"
 
+	"github.com/sayarakscodes/replay-gate/internal/redact"
 	"github.com/sayarakscodes/replay-gate/internal/sampler"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +15,7 @@ import (
 // vars in TRD §10, load defaults from replaygate.yaml (if given), let flags
 // override them, and write a corpus in the format internal/corpus defines.
 func newSampleCmd() *cobra.Command {
-	var configPath, out string
+	var configPath, out, redaction string
 	var cap_, maxEvents, typeScanLimit int
 	var openClosedSplit float64
 	var closedWindow string
@@ -58,6 +60,19 @@ func newSampleCmd() *cobra.Command {
 			if cmd.Flags().Changed("history-rps") {
 				cfg.RateLimit.HistoryRPS = historyRPS
 			}
+			if cmd.Flags().Changed("redaction") {
+				cfg.Redaction = redaction
+			}
+
+			if cfg.Redaction == redact.ProfileNone {
+				fmt.Fprintln(cmd.ErrOrStderr(), "WARNING: --redaction=none — activity/workflow/signal payloads will be")
+				fmt.Fprintln(cmd.ErrOrStderr(), "written to the corpus UNREDACTED. Do not commit or share this corpus if")
+				fmt.Fprintln(cmd.ErrOrStderr(), "the sampled workflows may carry PII or secrets.")
+			}
+			scrubber, err := redact.NewScrubber(cfg.Redaction, []byte(os.Getenv("REPLAYGATE_REDACTION_KEY")))
+			if err != nil {
+				return fmt.Errorf("configuring redaction: %w", err)
+			}
 
 			c, namespace, err := sampler.DialFromEnv()
 			if err != nil {
@@ -66,7 +81,7 @@ func newSampleCmd() *cobra.Command {
 			defer c.Close()
 
 			logger := slog.New(slog.NewTextHandler(cmd.ErrOrStderr(), nil))
-			s := sampler.New(c, namespace, cfg, logger)
+			s := sampler.New(c, namespace, cfg, scrubber, logger)
 
 			result, err := s.Run(cmd.Context(), out)
 			if err != nil {
@@ -88,6 +103,7 @@ func newSampleCmd() *cobra.Command {
 	cmd.Flags().StringVar(&closedWindow, "closed-window", "", "how far back to look for recently-closed workflows, e.g. 168h (default from config: 168h)")
 	cmd.Flags().Float64Var(&visibilityRPS, "visibility-rps", 0, "rate limit for ListWorkflow calls (default from config: 5)")
 	cmd.Flags().Float64Var(&historyRPS, "history-rps", 0, "rate limit for GetWorkflowExecutionHistory calls (default from config: 10)")
+	cmd.Flags().StringVar(&redaction, "redaction", "", "payload redaction profile: none|default|hash (default from config: default); hash requires REPLAYGATE_REDACTION_KEY")
 	cmd.MarkFlagRequired("out")
 	return cmd
 }

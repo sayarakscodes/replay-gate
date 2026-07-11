@@ -18,6 +18,7 @@ import (
 	"golang.org/x/time/rate"
 
 	"github.com/sayarakscodes/replay-gate/internal/corpus"
+	"github.com/sayarakscodes/replay-gate/internal/redact"
 )
 
 // Sampler pulls a stratified sample of workflow histories from a live
@@ -27,20 +28,28 @@ type Sampler struct {
 	client    client.Client
 	namespace string
 	cfg       Config
+	scrubber  redact.Scrubber
 	logger    *slog.Logger
 
 	visLimiter  *rate.Limiter
 	histLimiter *rate.Limiter
 }
 
-func New(c client.Client, namespace string, cfg Config, logger *slog.Logger) *Sampler {
+// New constructs a Sampler. scrubber runs on every payload before it's
+// persisted (TRD §5.3, N4) — a nil scrubber defaults to redact.DefaultScrubber,
+// never to a passthrough, so a caller can't silently end up unredacted.
+func New(c client.Client, namespace string, cfg Config, scrubber redact.Scrubber, logger *slog.Logger) *Sampler {
 	if logger == nil {
 		logger = slog.Default()
+	}
+	if scrubber == nil {
+		scrubber = redact.DefaultScrubber{}
 	}
 	return &Sampler{
 		client:      c,
 		namespace:   namespace,
 		cfg:         cfg,
+		scrubber:    scrubber,
 		logger:      logger,
 		visLimiter:  rate.NewLimiter(rate.Limit(cfg.RateLimit.VisibilityRPS), 1),
 		histLimiter: rate.NewLimiter(rate.Limit(cfg.RateLimit.HistoryRPS), 1),
@@ -84,7 +93,7 @@ func (s *Sampler) Run(ctx context.Context, dir string) (*Result, error) {
 
 	builder := corpus.NewBuilder(dir,
 		corpus.ClusterInfo{Namespace: s.namespace},
-		corpus.RedactionInfo{Profile: "none"}, // redaction lands in a later issue (#6)
+		corpus.RedactionInfo{Profile: s.cfg.Redaction, FieldsScrubbed: redact.FieldsScrubbed(s.cfg.Redaction)},
 	)
 	builder.SetSDKVersion(temporal.SDKVersion)
 
@@ -113,6 +122,10 @@ func (s *Sampler) Run(ctx context.Context, dir string) (*Result, error) {
 				result.Skipped = append(result.Skipped, SkipReason{wfType, wfID, runID, fmt.Sprintf("exceeds max-events (%d)", s.cfg.MaxEvents)})
 				continue
 			}
+
+			// Redaction must run before anything reaches disk — this is the
+			// only place a fetched history is written to the corpus (N4).
+			redact.RedactHistory(hist, s.scrubber)
 
 			if err := builder.AddHistory(wfType, wfID, runID, status, hist); err != nil {
 				return nil, fmt.Errorf("writing history %s/%s/%s: %w", wfType, wfID, runID, err)

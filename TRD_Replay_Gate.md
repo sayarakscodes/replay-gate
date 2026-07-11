@@ -21,7 +21,7 @@ This document specifies *how* Replay Gate is built: language, dependencies, modu
 | Concern | Choice | Rationale |
 |---|---|---|
 | Language | Go ≥ 1.22 | Must link the workflow code under test into the same process as the replayer (see §5.1); Temporal Go SDK is Go-native. |
-| Temporal SDK | `go.temporal.io/sdk` — pinned range `>= 1.25.0, < 2.0.0`, tested matrix in CI | Differ parses SDK error structures; version coupling is a named risk (PRD §8), so the supported range is explicit and CI-tested. |
+| Temporal SDK | `go.temporal.io/sdk` — pinned range `>= 1.34.0, < 2.0.0`, tested matrix in CI | Differ parses SDK error structures; version coupling is a named risk (PRD §8), so the supported range is explicit and CI-tested. Floor verified empirically (see TRD §14 OQ3 resolution, issue #7): the `[TMPRL1100]` marker itself only appears from v1.26.0, and the "During replay, a matching %v command was expected..." template (used to classify the changed-timer regression class) only appears from v1.34.0 — below that, all classes still *detect* the divergence, but that one specific class falls back to `unknown` rather than `removed`. |
 | History protos | `go.temporal.io/api` (`history/v1`, `enums/v1`, `workflowservice/v1`) | Canonical wire types; corpus files are protojson-encoded `history.History`. |
 | CLI framework | `spf13/cobra` | Standard, subcommand-friendly (`sample`, `replay`, `report`). |
 | Config | YAML file (`replaygate.yaml`) + flags + env vars, precedence: flags > env > file | CI-friendly; secrets only via env (§10). |
@@ -108,7 +108,7 @@ corpus/
   "formatVersion": 1,
   "sampledAt": "2026-07-05T10:00:00Z",
   "cluster": { "namespace": "prod", "endpoint": "redacted-ok" },
-  "sdkVersionAtSampling": "1.29.0",
+  "sdkVersionAtSampling": "1.45.0",
   "redaction": { "profile": "default", "fieldsScrubbed": ["input", "result"] },
   "entries": [
     {
@@ -315,8 +315,9 @@ Memory: histories held decoded in memory; at ~50 KB/history × 10 000 cap ≈ 50
 - Corpus location (PRD OQ1): directory format works both committed and in object storage; v1 ships committed-fixture flow, `--corpus` accepts a path only (object-storage fetch is a one-line pre-step in CI, not built in).
 - Open vs closed severity (PRD OQ2): `--fail-on=open` default, exit-code 2 for closed-only divergence.
 - Corpus versioning (PRD OQ3): content-hash `corpusVersion` in manifest, echoed in every report.
+- Mode B implementation (issue #3): a user-authored main package calling `gate.Main`, not code generation — see `pkg/gate/main.go`.
+- `Generated` field nullability (issue #7 spike): confirmed **nullable**. Only one of the SDK's ~10 `[TMPRL1100]` message templates carries both expected and generated; others carry one side or neither. `Divergence.Expected`/`Divergence.Generated` are both `*EventSummary`/`*CommandSummary`.
+- Minimum SDK version floor (issue #7 spike): verified empirically by diffing SDK source across versions, **not** 1.25 as assumed — see the corrected range in §2's tech stack table above.
+- rename vs. nondeterministic-construct ambiguity (issue #7): the SDK error is textually identical for both ("expected activity type A, got B") — it has no concept of *why* the code branched differently. The differ uses a best-effort source-scan heuristic (`runtime.FuncForPC` + grep the registered workflow function's own source for `time.Now(`/`rand.`/`go func(`) to upgrade the classification when it finds one; otherwise defaults to `rename`. This is a real signal, not a guess, but it is not a certainty — documented as such in `Divergence.Note`.
 
-**Still open:**
-1. Mode B implementation detail: generate-and-`go run` vs requiring the user to keep a `//go:build replaygate` file — decide during M0 by prototyping both.
-2. Whether the differ can extract the *generated command* reliably on all SDK versions in range, or only the expected event — affects `Generated` field nullability; resolve in M2 spike week 1.
-3. Minimum SDK version floor (1.25 assumed) — verify the error-message grammar is stable that far back before committing to the range.
+**Still open:** none from the original M0/M1/M2 list — all three items above are now resolved.

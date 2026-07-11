@@ -21,5 +21,6 @@ func newRootCmd() *cobra.Command {
 	}
 	root.AddCommand(newVerifyCmd())
 	root.AddCommand(newReplayCmd())
+	root.AddCommand(newSampleCmd())
 	return root
 }

@@ -24,5 +24,20 @@ jobs:
     - name: Build
       run: go build -v ./...
 
+    - name: Start local Temporal dev server
+      # Enables internal/sampler's round-trip test and any future live-cluster
+      # tests; they skip gracefully if this step is absent, but running it
+      # here means they actually execute in CI instead of always skipping.
+      run: |
+        url=$(curl -sL https://api.github.com/repos/temporalio/cli/releases/latest \
+          | grep browser_download_url | grep linux_amd64 | cut -d '"' -f4)
+        curl -sL "$url" | tar xz
+        nohup ./temporal server start-dev --headless --port 7233 --ip 127.0.0.1 >temporal-dev-server.log 2>&1 &
+        disown
+        for i in $(seq 1 30); do
+          ./temporal operator cluster health --address 127.0.0.1:7233 2>/dev/null && break
+          sleep 1
+        done
+
     - name: Test
       run: go test -v ./...

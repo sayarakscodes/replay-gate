@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/sayarakscodes/replay-gate/internal/differ"
+	"github.com/sayarakscodes/replay-gate/internal/patcher"
 	"github.com/sayarakscodes/replay-gate/internal/replayer"
 	"github.com/sayarakscodes/replay-gate/internal/report"
 )
@@ -73,9 +75,17 @@ func (g *Gate) ReplayAll(opts ReplayAllOptions) (*Report, error) {
 	}
 	close(jobs)
 
+	fnByName := make(map[string]any, len(g.registrations))
+	for _, r := range g.registrations {
+		if r.Name != "" {
+			fnByName[r.Name] = r.Fn
+		}
+	}
+
 	var wg sync.WaitGroup
-	var mu sync.Mutex
+	var mu sync.Mutex // guards firstUnregisteredErr and pat (patcher.Patcher isn't safe for concurrent use)
 	var firstUnregisteredErr error
+	pat := patcher.New()
 
 	worker := func() {
 		defer wg.Done()
@@ -100,7 +110,16 @@ func (g *Gate) ReplayAll(opts ReplayAllOptions) (*Report, error) {
 				mu.Unlock()
 			}
 
-			results[i] = EntryResult{Ref: ref, Status: e.Status, Err: res.Err, Duration: dur}
+			result := EntryResult{Ref: ref, Status: e.Status, Err: res.Err, Duration: dur}
+			if res.Err != nil {
+				d := differ.Classify(res.Err, hist, fnByName[e.WorkflowType])
+				mu.Lock()
+				patch, _ := pat.Suggest(d)
+				mu.Unlock()
+				result.Divergence = &d
+				result.Patch = &patch
+			}
+			results[i] = result
 		}
 	}
 

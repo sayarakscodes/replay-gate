@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/sayarakscodes/replay-gate/internal/corpus"
+	"github.com/sayarakscodes/replay-gate/internal/differ"
+	"github.com/sayarakscodes/replay-gate/internal/patcher"
 )
 
 // Process exit codes per TRD §5.6. The open/closed severity split (exit 2) is
@@ -21,6 +23,11 @@ type EntryResult struct {
 	Err      error
 	Skipped  bool // true when excluded via an on-unregistered=skip-warn policy
 	Duration time.Duration
+	// Divergence and Patch are populated whenever Err != nil and not Skipped
+	// (F6/F4, TRD §5.4-5.5) — the differ's classification of Err, and the
+	// patcher's suggested fix for it. Both nil for a passing or skipped entry.
+	Divergence *differ.Divergence
+	Patch      *patcher.Patch
 }
 
 func (r EntryResult) Passed() bool { return r.Err == nil }

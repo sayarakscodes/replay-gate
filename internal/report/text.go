@@ -3,6 +3,7 @@ package report
 import (
 	"fmt"
 	"io"
+	"strings"
 )
 
 func writeText(w io.Writer, rep *Report) error {
@@ -17,6 +18,20 @@ func writeText(w io.Writer, rep *Report) error {
 		case r.Err != nil:
 			failed++
 			fmt.Fprintf(w, "FAIL  %s [%s]: %v\n", r.Ref, r.Status, r.Err)
+			if r.Divergence != nil {
+				fmt.Fprintf(w, "      class: %s\n", r.Divergence.Class)
+			}
+			if r.Patch != nil {
+				switch {
+				case r.Patch.Snippet != "":
+					fmt.Fprintf(w, "      suggested patch (changeID %q):\n", r.Patch.ChangeID)
+					for _, line := range strings.Split(r.Patch.Snippet, "\n") {
+						fmt.Fprintf(w, "        %s\n", line)
+					}
+				case r.Patch.Guidance != "":
+					fmt.Fprintf(w, "      guidance: %s\n", r.Patch.Guidance)
+				}
+			}
 		default:
 			passed++
 			fmt.Fprintf(w, "PASS  %s [%s] (%s)\n", r.Ref, r.Status, r.Duration)

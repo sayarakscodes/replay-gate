@@ -43,8 +43,8 @@ func TestReplayAll_AllMatching_Clean(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReplayAll: %v", err)
 	}
-	if rep.ExitCode() != gate.ExitClean {
-		t.Fatalf("expected ExitClean, got %d (divergences: %+v)", rep.ExitCode(), rep.Divergences())
+	if rep.ExitCode(gate.FailOnOpen) != gate.ExitClean {
+		t.Fatalf("expected ExitClean, got %d (divergences: %+v)", rep.ExitCode(gate.FailOnOpen), rep.Divergences())
 	}
 	if len(rep.Results) != 3 {
 		t.Fatalf("expected 3 results, got %d", len(rep.Results))
@@ -86,8 +86,13 @@ func TestReplayAll_RegressedEntry_Divergence(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReplayAll: %v", err)
 	}
-	if rep.ExitCode() != gate.ExitDivergence {
-		t.Fatalf("expected ExitDivergence, got %d", rep.ExitCode())
+	// SimpleOrder's fixture history is COMPLETED (closed) — under the default
+	// fail-on=open this is a warning, not a blocker (PRD open question 2).
+	if rep.ExitCode(gate.FailOnOpen) != gate.ExitDivergenceWarn {
+		t.Fatalf("expected ExitDivergenceWarn for a closed-only divergence under fail-on=open, got %d", rep.ExitCode(gate.FailOnOpen))
+	}
+	if rep.ExitCode(gate.FailOnAny) != gate.ExitDivergence {
+		t.Fatalf("expected ExitDivergence under fail-on=any, got %d", rep.ExitCode(gate.FailOnAny))
 	}
 	divs := rep.Divergences()
 	if len(divs) != 1 || divs[0].Ref.WorkflowType != "SimpleOrder" {
@@ -114,8 +119,8 @@ func TestReplayAll_UnregisteredType_SkipWarn(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ReplayAll: %v", err)
 	}
-	if rep.ExitCode() != gate.ExitClean {
-		t.Fatalf("skipped entries must not count as divergences, got exit code %d", rep.ExitCode())
+	if rep.ExitCode(gate.FailOnOpen) != gate.ExitClean {
+		t.Fatalf("skipped entries must not count as divergences, got exit code %d", rep.ExitCode(gate.FailOnOpen))
 	}
 
 	var skipped, passed int

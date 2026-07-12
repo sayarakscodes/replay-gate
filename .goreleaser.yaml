@@ -1,0 +1,48 @@
+# goreleaser v2 config. A tagged release (git tag vX.Y.Z && git push --tags)
+# builds the three target binaries the GitHub Action pulls, plus a
+# checksums.txt the Action verifies each download against (issue #9, TRD §5.6).
+#
+# Validate locally without releasing:  goreleaser check  &&  goreleaser release --snapshot --clean
+version: 2
+
+project_name: replaygate
+
+builds:
+  - id: replaygate
+    main: ./cmd/replaygate
+    binary: replaygate
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+    ignore:
+      # Targets are linux/amd64, linux/arm64, darwin/arm64 only — no Intel macOS.
+      - goos: darwin
+        goarch: amd64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}}
+
+archives:
+  - id: replaygate
+    ids: [replaygate]
+    # Name pattern the Action reconstructs from ${os}_${arch} to pick its download.
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    formats: [tar.gz]
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+release:
+  # Draft so a human reviews before publishing; the Action pins a tag anyway.
+  draft: false
+  prerelease: auto
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"

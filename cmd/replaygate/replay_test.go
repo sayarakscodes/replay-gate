@@ -46,16 +46,30 @@ func TestReplay_AllMatching_ExitClean(t *testing.T) {
 }
 
 func TestReplay_Regression_ExitDivergence(t *testing.T) {
+	// SimpleOrder's fixture is COMPLETED (closed), so under the default
+	// fail-on=open this is a warn (exit 2), not a blocking failure (exit 1).
 	cmd := exec.Command(binPath, "replay",
 		"--corpus", "../../testdata/corpus",
 		"--registrations", "../../testdata/replaymain_bad",
 	)
 	out, _ := cmd.CombinedOutput()
-	if cmd.ProcessState.ExitCode() != 1 {
-		t.Fatalf("expected exit code 1 for a regressed workflow, got %d\noutput:\n%s", cmd.ProcessState.ExitCode(), out)
+	if cmd.ProcessState.ExitCode() != 2 {
+		t.Fatalf("expected exit code 2 for a closed-only divergence under fail-on=open, got %d\noutput:\n%s", cmd.ProcessState.ExitCode(), out)
 	}
 	if !strings.Contains(string(out), "FAIL  SimpleOrder") {
 		t.Errorf("expected report to call out the SimpleOrder divergence, got:\n%s", out)
+	}
+}
+
+func TestReplay_Regression_FailOnAny_ExitDivergence(t *testing.T) {
+	cmd := exec.Command(binPath, "replay",
+		"--corpus", "../../testdata/corpus",
+		"--registrations", "../../testdata/replaymain_bad",
+		"--fail-on", "any",
+	)
+	out, _ := cmd.CombinedOutput()
+	if cmd.ProcessState.ExitCode() != 1 {
+		t.Fatalf("expected exit code 1 for a divergence under fail-on=any, got %d\noutput:\n%s", cmd.ProcessState.ExitCode(), out)
 	}
 }
 

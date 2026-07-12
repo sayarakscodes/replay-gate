@@ -150,7 +150,7 @@ func BenchmarkReplayCorpus(b *testing.B) {
 		if err != nil {
 			b.Fatalf("ReplayAll: %v", err)
 		}
-		if rep.ExitCode() != gate.ExitClean {
+		if rep.ExitCode(gate.FailOnOpen) != gate.ExitClean {
 			b.Fatalf("expected a clean replay, got %d divergences", len(rep.Divergences()))
 		}
 	}

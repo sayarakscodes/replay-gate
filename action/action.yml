@@ -1,0 +1,100 @@
+name: "Replay Gate"
+description: "Replay sampled Temporal workflow histories against this build and fail on non-determinism divergences."
+branding:
+  icon: "shield"
+  color: "purple"
+
+inputs:
+  corpus-path:
+    description: "Path to the corpus directory to replay against."
+    required: true
+  registrations:
+    description: "Path to a Go main package that registers your workflows and calls gate.Main (Mode B; see TRD §4)."
+    required: true
+  fail-on:
+    description: "Which divergences block the check: open (default, RUNNING workflows only) | any."
+    required: false
+    default: "open"
+  go-version:
+    description: "Go toolchain version used to build the registrations package."
+    required: false
+    default: "1.25"
+  version:
+    description: "Release tag of replaygate to install when install-from=release (e.g. v1.2.3, or 'latest')."
+    required: false
+    default: "latest"
+  install-from:
+    description: "Where to get the replaygate binary: release (checksum-verified download, default) | source (build from this action's checkout, for testing)."
+    required: false
+    default: "release"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ inputs.go-version }}
+
+    - name: Install replaygate (release, checksum-verified)
+      if: inputs.install-from == 'release'
+      shell: bash
+      env:
+        RG_VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+
+        # Map the runner platform to goreleaser's archive naming.
+        case "$RUNNER_OS" in
+          Linux)  os=linux ;;
+          macOS)  os=darwin ;;
+          *) echo "::error::unsupported runner OS $RUNNER_OS"; exit 1 ;;
+        esac
+        case "$RUNNER_ARCH" in
+          X64)   arch=amd64 ;;
+          ARM64) arch=arm64 ;;
+          *) echo "::error::unsupported runner arch $RUNNER_ARCH"; exit 1 ;;
+        esac
+        if [ "$os" = "darwin" ] && [ "$arch" = "amd64" ]; then
+          echo "::error::no darwin/amd64 build is published (targets: linux/amd64, linux/arm64, darwin/arm64)"
+          exit 1
+        fi
+
+        archive="replaygate_${os}_${arch}.tar.gz"
+        base="https://github.com/${GITHUB_ACTION_REPOSITORY:-sayarakscodes/replay-gate}/releases"
+        if [ "$RG_VERSION" = "latest" ]; then
+          url="$base/latest/download"
+        else
+          url="$base/download/$RG_VERSION"
+        fi
+
+        tmp="$(mktemp -d)"
+        echo "Downloading $archive from $url"
+        curl -fsSL "$url/$archive" -o "$tmp/$archive"
+        curl -fsSL "$url/checksums.txt" -o "$tmp/checksums.txt"
+
+        # Verify the downloaded archive's sha256 against the published checksums.
+        ( cd "$tmp" && grep " $archive\$" checksums.txt | sha256sum -c - )
+
+        tar -xzf "$tmp/$archive" -C "$tmp" replaygate
+        install -m 0755 "$tmp/replaygate" "$RUNNER_TEMP/replaygate"
+        echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+    - name: Install replaygate (build from source)
+      if: inputs.install-from == 'source'
+      shell: bash
+      run: |
+        set -euo pipefail
+        # GITHUB_ACTION_PATH points at this action's checkout (the repo root/action).
+        repo_root="$(cd "$GITHUB_ACTION_PATH/.." && pwd)"
+        go build -C "$repo_root" -o "$RUNNER_TEMP/replaygate" ./cmd/replaygate
+        echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+    - name: Replay
+      shell: bash
+      run: |
+        replaygate replay \
+          --corpus "${{ inputs.corpus-path }}" \
+          --registrations "${{ inputs.registrations }}" \
+          --fail-on "${{ inputs.fail-on }}" \
+          --format github

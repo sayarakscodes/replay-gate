@@ -8,12 +8,25 @@ import (
 	"github.com/sayarakscodes/replay-gate/internal/patcher"
 )
 
-// Process exit codes per TRD §5.6. The open/closed severity split (exit 2) is
-// introduced in a later milestone; for now any divergence is exit 1.
+// Process exit codes per TRD §5.6.
 const (
-	ExitClean            = 0
-	ExitDivergence       = 1
+	ExitClean = 0
+	// ExitDivergence: a divergence exists in an open (RUNNING) workflow — or,
+	// under FailOnAny, any divergence at all. Closed workflows never replay
+	// in production, so this is the "will actually break something" signal.
+	ExitDivergence = 1
+	// ExitDivergenceWarn: divergences exist, but only in closed histories,
+	// under the default FailOnOpen policy — worth surfacing, not worth
+	// blocking a merge over (PRD §8 open question 2).
+	ExitDivergenceWarn   = 2
 	ExitOperationalError = 3
+)
+
+// FailOn selects which divergences are "blocking" (ExitDivergence) versus
+// "warn-only" (ExitDivergenceWarn) — see ExitCode.
+const (
+	FailOnOpen = "open"
+	FailOnAny  = "any"
 )
 
 // EntryResult is the outcome of replaying one corpus entry.
@@ -51,10 +64,33 @@ func (r *Report) Divergences() []EntryResult {
 	return out
 }
 
+// OpenDivergences returns the divergences in a RUNNING (open) workflow — the
+// subset that will actually break something already in flight in production.
+func (r *Report) OpenDivergences() []EntryResult {
+	var out []EntryResult
+	for _, res := range r.Divergences() {
+		if res.Status == corpus.StatusRunning {
+			out = append(out, res)
+		}
+	}
+	return out
+}
+
 // ExitCode maps the report to the process exit code contract in TRD §5.6.
-func (r *Report) ExitCode() int {
-	if len(r.Divergences()) > 0 {
+// failOn is FailOnOpen (default) or FailOnAny; an empty string is treated as
+// FailOnOpen. An invalid value is treated the same as FailOnOpen — ExitCode
+// has no error return, so callers that need to reject a bad flag value
+// should validate it themselves before getting here.
+func (r *Report) ExitCode(failOn string) int {
+	divs := r.Divergences()
+	if len(divs) == 0 {
+		return ExitClean
+	}
+	if failOn == FailOnAny {
 		return ExitDivergence
 	}
-	return ExitClean
+	if len(r.OpenDivergences()) > 0 {
+		return ExitDivergence
+	}
+	return ExitDivergenceWarn
 }

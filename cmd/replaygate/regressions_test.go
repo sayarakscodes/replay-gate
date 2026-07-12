@@ -36,13 +36,17 @@ func TestRegressionBattery(t *testing.T) {
 			})
 
 			t.Run("after_diverges", func(t *testing.T) {
+				// fail-on=any so a divergence is exit 1 regardless of whether
+				// the fixture history is open or closed — this test is about
+				// detection, not the open/closed severity split.
 				cmd := exec.Command(binPath, "replay",
 					"--corpus", corpusDir,
 					"--registrations", "../../testdata/regressions/"+class+"/after",
+					"--fail-on", "any",
 				)
 				out, _ := cmd.CombinedOutput()
-				if cmd.ProcessState.ExitCode() == 0 {
-					t.Fatalf("expected the regressed workflow to diverge from the recorded history, got a clean exit\noutput:\n%s", out)
+				if cmd.ProcessState.ExitCode() != 1 {
+					t.Fatalf("expected the regressed workflow to diverge (exit 1 under fail-on=any), got exit %d\noutput:\n%s", cmd.ProcessState.ExitCode(), out)
 				}
 			})
 		})

@@ -6,6 +6,24 @@ event-level divergence diffs and `GetVersion` patch suggestions. See
 [PRD_Replay_Gate.md](PRD_Replay_Gate.md) and [TRD_Replay_Gate.md](TRD_Replay_Gate.md)
 for the full design.
 
+## Quick start (GitHub Action)
+
+Add a small Go `main` package that registers your workflows and calls
+`gate.Main` (see [examples/replaygate](examples/replaygate)), commit a corpus,
+then add this to a workflow file:
+
+```yaml
+- uses: sayarakscodes/replay-gate/action@v1
+  with:
+    corpus-path: ./corpus
+    registrations: ./cmd/replaygate
+```
+
+Divergences in in-flight (RUNNING) workflows fail the check; divergences only
+in closed histories warn by default (set `fail-on: any` to block on those
+too). Each divergence is posted as an inline annotation with a suggested
+`GetVersion` fix, and a summary table is written to the job summary.
+
 ## Commands
 
 ### `replaygate verify`
@@ -27,9 +45,16 @@ at a small Go `main` package that registers workflows and calls `gate.Main`
 replaygate replay --corpus testdata/corpus --registrations ./path/to/registrations
 ```
 
-Exit codes: `0` clean, `1` divergence found, `3` operational error (bad
-corpus, compile failure, unregistered workflow type with the default
-`--on-unregistered=fail`).
+Report formats (`--format`): `text` (default), `json` (stable
+`reportVersion`-tagged schema), `github` (inline annotations + a Markdown job
+summary written to `$GITHUB_STEP_SUMMARY`), and `sarif` (for GitHub code
+scanning).
+
+Exit codes: `0` clean; `1` a divergence that blocks (in a RUNNING workflow, or
+any divergence under `--fail-on=any`); `2` a divergence found only in closed
+histories under the default `--fail-on=open` (warn, doesn't block a merge);
+`3` operational error (bad corpus, compile failure, unregistered workflow type
+with the default `--on-unregistered=fail`).
 
 ### `replaygate sample`
 

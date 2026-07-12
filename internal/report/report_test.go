@@ -25,7 +25,7 @@ func sampleReport() *Report {
 
 func TestWriteText(t *testing.T) {
 	var buf bytes.Buffer
-	if err := Write(&buf, sampleReport(), FormatText); err != nil {
+	if err := Write(&buf, sampleReport(), FormatText, FailOnOpen); err != nil {
 		t.Fatalf("Write: %v", err)
 	}
 	out := buf.String()
@@ -38,7 +38,7 @@ func TestWriteText(t *testing.T) {
 
 func TestWriteJSON(t *testing.T) {
 	var buf bytes.Buffer
-	if err := Write(&buf, sampleReport(), FormatJSON); err != nil {
+	if err := Write(&buf, sampleReport(), FormatJSON, FailOnOpen); err != nil {
 		t.Fatalf("Write: %v", err)
 	}
 
@@ -59,24 +59,58 @@ func TestWriteJSON(t *testing.T) {
 
 func TestWrite_UnknownFormat(t *testing.T) {
 	var buf bytes.Buffer
-	if err := Write(&buf, sampleReport(), "yaml"); err == nil {
+	if err := Write(&buf, sampleReport(), "yaml", FailOnOpen); err == nil {
 		t.Fatal("expected an error for an unknown format")
 	}
 }
 
-func TestReport_ExitCode(t *testing.T) {
+func TestReport_ExitCode_Clean(t *testing.T) {
 	clean := &Report{Results: []EntryResult{{Status: "COMPLETED"}}}
-	if got := clean.ExitCode(); got != ExitClean {
+	if got := clean.ExitCode(FailOnOpen); got != ExitClean {
 		t.Errorf("expected ExitClean, got %d", got)
 	}
+}
 
+func TestReport_ExitCode_ClosedOnlyDivergence(t *testing.T) {
+	// sampleReport's one divergence (InvoiceFlow) is in a COMPLETED (closed)
+	// workflow — under the default fail-on=open, that's a warning, not a
+	// blocking failure (PRD open question 2).
 	dirty := sampleReport()
-	if got := dirty.ExitCode(); got != ExitDivergence {
-		t.Errorf("expected ExitDivergence, got %d", got)
+	if got := dirty.ExitCode(FailOnOpen); got != ExitDivergenceWarn {
+		t.Errorf("expected ExitDivergenceWarn for a closed-only divergence under fail-on=open, got %d", got)
 	}
+	if got := dirty.ExitCode(FailOnAny); got != ExitDivergence {
+		t.Errorf("expected ExitDivergence under fail-on=any regardless of open/closed, got %d", got)
+	}
+}
 
+func TestReport_ExitCode_OpenDivergenceAlwaysBlocks(t *testing.T) {
+	openDivergence := &Report{Results: []EntryResult{
+		{Status: "RUNNING", Err: errors.New("[TMPRL1100] lookup failed")},
+	}}
+	if got := openDivergence.ExitCode(FailOnOpen); got != ExitDivergence {
+		t.Errorf("expected ExitDivergence for a divergence in a RUNNING workflow, got %d", got)
+	}
+	if got := openDivergence.ExitCode(FailOnAny); got != ExitDivergence {
+		t.Errorf("expected ExitDivergence under fail-on=any too, got %d", got)
+	}
+}
+
+func TestReport_ExitCode_SkippedEntryIgnored(t *testing.T) {
 	skippedOnly := &Report{Results: []EntryResult{{Status: "RUNNING", Skipped: true}}}
-	if got := skippedOnly.ExitCode(); got != ExitClean {
+	if got := skippedOnly.ExitCode(FailOnOpen); got != ExitClean {
 		t.Errorf("a skipped-only report must not count as a divergence, got %d", got)
+	}
+}
+
+func TestReport_OpenDivergences(t *testing.T) {
+	rep := &Report{Results: []EntryResult{
+		{Ref: corpus.EntryRef{WorkflowType: "A"}, Status: "RUNNING", Err: errors.New("x")},
+		{Ref: corpus.EntryRef{WorkflowType: "B"}, Status: "COMPLETED", Err: errors.New("y")},
+		{Ref: corpus.EntryRef{WorkflowType: "C"}, Status: "RUNNING"}, // passed, not a divergence
+	}}
+	open := rep.OpenDivergences()
+	if len(open) != 1 || open[0].Ref.WorkflowType != "A" {
+		t.Errorf("expected exactly the RUNNING divergence (A), got %+v", open)
 	}
 }

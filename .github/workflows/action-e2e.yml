@@ -1,0 +1,66 @@
+# Exercises the composite Action (action/action.yml) end to end against
+# examples/, in both directions: the unchanged workflow must pass, and the
+# deliberately-regressed one must be caught with the expected exit code and a
+# GitHub annotation. Uses install-from=source so it runs without a published
+# release (issue #9 acceptance criteria).
+name: Action E2E
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  clean-passes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The unchanged OrderWorkflow matches examples/corpus, so the Action
+      # succeeds (exit 0) and the step passes normally.
+      - name: Replay Gate (should pass)
+        uses: ./action
+        with:
+          corpus-path: examples/corpus
+          registrations: ./examples/replaygate
+          install-from: source
+
+  regression-is-caught:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The regressed workflow diverges. fail-on=any makes it a hard failure
+      # (exit 1) regardless of the closed fixture; continue-on-error lets us
+      # assert on the outcome rather than failing the job.
+      - name: Replay Gate (should fail)
+        id: gate
+        continue-on-error: true
+        uses: ./action
+        with:
+          corpus-path: examples/corpus
+          registrations: ./examples/replaygate_regressed
+          fail-on: any
+          install-from: source
+
+      - name: Assert the regression was caught
+        run: |
+          if [ "${{ steps.gate.outcome }}" != "failure" ]; then
+            echo "::error::expected Replay Gate to fail on the regressed workflow, but it did not"
+            exit 1
+          fi
+          echo "Replay Gate correctly failed on the deliberate regression."
+
+      # Independently confirm the annotation is emitted (the composite action's
+      # replay step output is captured here for a direct assertion).
+      - name: Assert annotation output
+        run: |
+          go build -o /tmp/replaygate ./cmd/replaygate
+          out="$(/tmp/replaygate replay \
+            --corpus examples/corpus \
+            --registrations ./examples/replaygate_regressed \
+            --fail-on any --format github 2>/dev/null || true)"
+          echo "$out"
+          echo "$out" | grep -q "^::error title=Replay divergence" \
+            || { echo "::error::expected an ::error annotation in github-format output"; exit 1; }
+        shell: bash

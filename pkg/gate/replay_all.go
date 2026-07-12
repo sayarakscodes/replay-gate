@@ -20,11 +20,19 @@ const (
 	OnUnregisteredSkipWarn = "skip-warn"
 )
 
+// FailOn selects which divergences block (ExitDivergence) vs warn
+// (ExitDivergenceWarn) — re-exported from internal/report (TRD §5.6, PRD OQ2).
+const (
+	FailOnOpen = report.FailOnOpen
+	FailOnAny  = report.FailOnAny
+)
+
 // Process exit codes, re-exported from internal/report for callers of this
 // package (TRD §5.6).
 const (
 	ExitClean            = report.ExitClean
 	ExitDivergence       = report.ExitDivergence
+	ExitDivergenceWarn   = report.ExitDivergenceWarn
 	ExitOperationalError = report.ExitOperationalError
 )
 

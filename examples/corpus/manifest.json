@@ -1,0 +1,23 @@
+{
+  "corpusVersion": "sha256:845bbac4b0a56b4274eb9441ad1aca75a8a0dc7f3461543b3c41af542db6f194",
+  "formatVersion": 1,
+  "sampledAt": "2026-07-12T19:04:51.584512Z",
+  "cluster": {
+    "namespace": "default",
+    "endpoint": "local dev server"
+  },
+  "redaction": {
+    "profile": "none"
+  },
+  "entries": [
+    {
+      "file": "histories/OrderWorkflow/examples-order-1_019f57b7-ce6f-756e-8e4f-35a06ef937da.json",
+      "workflowType": "OrderWorkflow",
+      "workflowID": "examples-order-1",
+      "runID": "019f57b7-ce6f-756e-8e4f-35a06ef937da",
+      "status": "COMPLETED",
+      "eventCount": 17,
+      "sha256": "d4f33b4bf693bd98f73fcd51ffbf0e872631f15dda6a66f946fbaa12896059de"
+    }
+  ]
+}

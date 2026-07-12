@@ -29,10 +29,15 @@ func Main(g *Gate, args []string, stdout, stderr io.Writer) int {
 	fs := flag.NewFlagSet("replaygate", flag.ContinueOnError)
 	corpusDir := fs.String("corpus", "", "corpus directory (overrides the CorpusDir passed to gate.New)")
 	parallelism := fs.Int("parallelism", 0, "number of concurrent replay workers (0 = GOMAXPROCS)")
-	format := fs.String("format", report.FormatText, "report format: text|json")
+	format := fs.String("format", report.FormatText, "report format: text|json|github|sarif")
 	onUnregistered := fs.String("on-unregistered", OnUnregisteredFail, "behavior for unregistered workflow types: fail|skip-warn")
+	failOn := fs.String("fail-on", FailOnOpen, "which divergences block: open (default, RUNNING workflows only) | any")
 	fs.SetOutput(stderr)
 	if err := fs.Parse(args); err != nil {
+		return ExitOperationalError
+	}
+	if *failOn != FailOnOpen && *failOn != FailOnAny {
+		fmt.Fprintf(stderr, "invalid --fail-on value %q (want %q or %q)\n", *failOn, FailOnOpen, FailOnAny)
 		return ExitOperationalError
 	}
 
@@ -49,10 +54,10 @@ func Main(g *Gate, args []string, stdout, stderr io.Writer) int {
 		return ExitOperationalError
 	}
 
-	if err := report.Write(stdout, rep, *format); err != nil {
+	if err := report.Write(stdout, rep, *format, *failOn); err != nil {
 		fmt.Fprintln(stderr, err)
 		return ExitOperationalError
 	}
 
-	return rep.ExitCode()
+	return rep.ExitCode(*failOn)
 }

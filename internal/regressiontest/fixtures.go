@@ -1,9 +1,9 @@
 // Package regressiontest centralizes the 6 regression classes' "after"
 // workflow bodies and corpus-loading, shared by internal/differ's and
-// internal/patcher's tests, so the fixtures behind the PRD's "6/6 classes
-// caught" metric are defined in exactly one place. These must stay in exact
-// lockstep with testdata/regressions/*/after/main.go — see that directory's
-// README for how to add a new class.
+// internal/patcher's tests, so the fixtures behind the "all 6 classes caught"
+// metric are defined in exactly one place. These must stay in exact lockstep
+// with testdata/regressions/*/after/main.go — see that directory's README for
+// how to add a new class.
 package regressiontest
 
 import (

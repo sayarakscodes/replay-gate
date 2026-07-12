@@ -1,6 +1,6 @@
-// Package patcher maps a differ.Divergence to a suggested fix (F6, TRD §5.5).
+// Package patcher maps a differ.Divergence to a suggested fix.
 // It never touches the user's source — v1 emits a rendered snippet or
-// guidance text only (PRD non-goal: no code mutation).
+// guidance text only.
 package patcher
 
 import (

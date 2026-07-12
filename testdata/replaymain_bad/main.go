@@ -1,8 +1,8 @@
-// Command replaymain_bad is a fixture Mode B registrations package with a
-// deliberate regression: SimpleOrder drops its ChargeCard activity call, the
-// "removed activity on an existing code path" case from the PRD's problem
-// statement. Used by the CLI integration test to prove --registrations
-// surfaces a real divergence with exit code 1.
+// Command replaymain_bad is a fixture registrations package with a deliberate
+// regression: SimpleOrder drops its ChargeCard activity call — the classic
+// "removed activity on an existing code path" mistake. Used by the CLI
+// integration test to prove --registrations surfaces a real divergence with a
+// non-zero exit code.
 package main
 
 import (

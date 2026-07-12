@@ -22,7 +22,7 @@ import (
 )
 
 // Sampler pulls a stratified sample of workflow histories from a live
-// cluster (F1, TRD §5.3). All cluster calls go through visLimiter or
+// cluster. All cluster calls go through visLimiter or
 // histLimiter and are retried per retry.go.
 type Sampler struct {
 	client    client.Client
@@ -36,7 +36,7 @@ type Sampler struct {
 }
 
 // New constructs a Sampler. scrubber runs on every payload before it's
-// persisted (TRD §5.3, N4) — a nil scrubber defaults to redact.DefaultScrubber,
+// persisted — a nil scrubber defaults to redact.DefaultScrubber,
 // never to a passthrough, so a caller can't silently end up unredacted.
 func New(c client.Client, namespace string, cfg Config, scrubber redact.Scrubber, logger *slog.Logger) *Sampler {
 	if logger == nil {
@@ -72,7 +72,7 @@ type Result struct {
 }
 
 // Run discovers workflow types, stratified-samples executions per type
-// (TRD §5.3: per-type quota, openClosedSplit between open/closed, reservoir
+// (: per-type quota, openClosedSplit between open/closed, reservoir
 // sampling within each bucket), fetches each selected history, and writes a
 // corpus to dir via corpus.Builder.
 func (s *Sampler) Run(ctx context.Context, dir string) (*Result, error) {
@@ -124,7 +124,7 @@ func (s *Sampler) Run(ctx context.Context, dir string) (*Result, error) {
 			}
 
 			// Redaction must run before anything reaches disk — this is the
-			// only place a fetched history is written to the corpus (N4).
+			// only place a fetched history is written to the corpus.
 			redact.RedactHistory(hist, s.scrubber)
 
 			if err := builder.AddHistory(wfType, wfID, runID, status, hist); err != nil {

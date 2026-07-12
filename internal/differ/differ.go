@@ -1,6 +1,6 @@
 // Package differ turns the opaque error from ReplayWorkflowHistory into a
-// structured Divergence (TRD §5.4). The raw SDK error is nearly unreadable
-// (PRD §6); this is the highest-signal engineering in the whole project.
+// structured Divergence. The raw SDK error is nearly unreadable
+// ; this is the highest-signal engineering in the whole project.
 //
 // Extraction is regex-only, not typed (errors.As): the concrete error type
 // the SDK returns for non-determinism panics is *internal.workflowPanicError,
@@ -21,10 +21,10 @@ import (
 	historypb "go.temporal.io/api/history/v1"
 )
 
-// Class is deliberately a small, closed set matching the PRD's named
-// regression classes plus a fallback. Anything the regex table doesn't
-// recognize is Unknown — never guessed — to keep the false-positive
-// guarantee (N2) meaningful: a report line always corresponds to a real
+// Class is deliberately a small, closed set of the named regression classes
+// plus a fallback. Anything the regex table doesn't recognize is Unknown —
+// never guessed — to keep the false-positive guarantee meaningful: a report
+// line always corresponds to a real
 // replay failure, but its Class is only ever asserted when we have real
 // evidence for it.
 type Class string

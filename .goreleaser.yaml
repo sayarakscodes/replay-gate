@@ -1,6 +1,6 @@
 # goreleaser v2 config. A tagged release (git tag vX.Y.Z && git push --tags)
 # builds the three target binaries the GitHub Action pulls, plus a
-# checksums.txt the Action verifies each download against (issue #9, TRD §5.6).
+# checksums.txt the Action verifies each download against.
 #
 # Validate locally without releasing:  goreleaser check  &&  goreleaser release --snapshot --clean
 version: 2

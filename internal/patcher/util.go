@@ -4,7 +4,7 @@ import "fmt"
 
 // kebab converts a PascalCase/camelCase identifier to kebab-case, e.g.
 // "NotifyLegacy" -> "notify-legacy", "SendNotificationV2" -> "send-notification-v2".
-// Matches the changeID format TRD §5.5 illustrates.
+// Matches the changeID format illustrates.
 func kebab(s string) string {
 	var out []rune
 	for i, r := range s {

@@ -9,7 +9,7 @@ inputs:
     description: "Path to the corpus directory to replay against."
     required: true
   registrations:
-    description: "Path to a Go main package that registers your workflows and calls gate.Main (Mode B; see TRD §4)."
+    description: "Path to a Go main package that registers your workflows and calls gate.Main."
     required: true
   fail-on:
     description: "Which divergences block the check: open (default, RUNNING workflows only) | any."

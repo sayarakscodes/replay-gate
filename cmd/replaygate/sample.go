@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// newSampleCmd wires F1 (TRD §5.3): connect to a live cluster via the env
-// vars in TRD §10, load defaults from replaygate.yaml (if given), let flags
+// newSampleCmd wires F1: connect to a live cluster via the env
+// vars in, load defaults from replaygate.yaml (if given), let flags
 // override them, and write a corpus in the format internal/corpus defines.
 func newSampleCmd() *cobra.Command {
 	var configPath, out, redaction string

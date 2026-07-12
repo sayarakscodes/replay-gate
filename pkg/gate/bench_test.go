@@ -134,9 +134,9 @@ func buildSyntheticCorpus(tb testing.TB, n int) string {
 	return dir
 }
 
-// BenchmarkReplayCorpus establishes the N1 throughput baseline (TRD §5.1,
-// target >= 500 histories/sec on a standard CI runner) against a synthetic
-// 1000-history corpus.
+// BenchmarkReplayCorpus establishes the throughput baseline (target >= 500
+// histories/sec on a standard CI runner) against a synthetic 1000-history
+// corpus.
 func BenchmarkReplayCorpus(b *testing.B) {
 	const size = 1000
 	dir := buildSyntheticCorpus(b, size)

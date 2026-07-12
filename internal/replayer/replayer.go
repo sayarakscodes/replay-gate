@@ -1,5 +1,5 @@
 // Package replayer wraps the Temporal Go SDK's worker.WorkflowReplayer to replay a
-// single corpus history against a set of registered workflow functions (TRD §5.1).
+// single corpus history against a set of registered workflow functions.
 package replayer
 
 import (
@@ -28,8 +28,8 @@ func (r Result) Passed() bool { return r.Err == nil }
 
 // newReplayer builds a fresh WorkflowReplayer with the given registrations. A new
 // instance is required per replay: the SDK's WorkflowReplayer is not safe for
-// concurrent ReplayWorkflowHistory calls, so parallel replay (a later milestone)
-// must call this once per goroutine rather than share one instance.
+// concurrent ReplayWorkflowHistory calls, so parallel replay must call this
+// once per goroutine rather than share one instance.
 func newReplayer(registrations []Registration) worker.WorkflowReplayer {
 	r := worker.NewWorkflowReplayer()
 	for _, reg := range registrations {
@@ -64,8 +64,7 @@ const unregisteredWorkflowTypeMarker = "unable to find workflow type:"
 
 // IsUnregisteredWorkflowType reports whether err is the SDK's error for a corpus
 // entry whose workflow type has no matching registration, as opposed to a genuine
-// replay divergence. Callers use this to implement --on-unregistered semantics
-// (TRD §9) before the full differ (a later milestone) takes over classification.
+// replay divergence. Callers use this to implement --on-unregistered semantics.
 func IsUnregisteredWorkflowType(err error) bool {
 	return err != nil && strings.Contains(err.Error(), unregisteredWorkflowTypeMarker)
 }

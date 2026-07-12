@@ -1,4 +1,4 @@
-// Package corpus implements the on-disk corpus format described in TRD_Replay_Gate.md §5.2:
+// Package corpus implements the on-disk corpus format described in :
 // a directory of protojson-encoded workflow histories plus a manifest.json that
 // content-hashes them, so a build can be tied to the exact corpus it was validated against.
 package corpus

@@ -1,4 +1,4 @@
-// Package gate is the public embedding API for Replay Gate (TRD §4, Mode A):
+// Package gate is the public embedding API for Replay Gate:
 // a caller registers their workflow functions and replays corpus histories
 // against them, from a Go test in their own repo.
 package gate
@@ -20,7 +20,7 @@ type EntryRef = corpus.EntryRef
 
 type Config struct {
 	// CorpusDir is the path to a corpus directory as produced by `replaygate sample`
-	// or hand-built per TRD §5.2.
+	// or hand-built per.
 	CorpusDir string
 	// Logger is optional; defaults to a stderr logger if unset. This matters
 	// beyond cosmetics: the SDK's own default logger writes to os.Stdout,
@@ -74,9 +74,9 @@ func (g *Gate) loadCorpus() (*corpus.Corpus, error) {
 }
 
 // ReplayOne replays a single named history from the configured corpus against
-// the registered workflows and returns its pass/fail result. Parallel replay of
-// an entire corpus, reporting, and CLI wiring are layered on top in a later
-// milestone (TRD §5.1, §5.6) — this is the single-history mechanism they build on.
+// the registered workflows and returns its pass/fail result. It's the
+// single-history mechanism that ReplayAll (parallel replay of a whole corpus)
+// builds on.
 func (g *Gate) ReplayOne(ref EntryRef) (HistoryResult, error) {
 	c, err := g.loadCorpus()
 	if err != nil {

@@ -1,8 +1,8 @@
-// Command replaygate is the Mode B registrations package for the examples
-// worker (TRD §4): register the workflows under test, then hand off to
-// gate.Main. The GitHub Action runs `replaygate replay --registrations
-// ./examples/replaygate` against ./examples/corpus. Because OrderWorkflow here
-// is unchanged, that replay is clean.
+// Command replaygate is the registrations package for the examples worker:
+// register the workflows under test, then hand off to gate.Main. The GitHub
+// Action runs `replaygate replay --registrations ./examples/replaygate`
+// against ./examples/corpus. Because OrderWorkflow here is unchanged, that
+// replay is clean.
 package main
 
 import (

@@ -9,7 +9,7 @@ import (
 
 // writeGitHub emits GitHub Actions workflow commands (annotations) to w, one
 // per divergence, and — when GITHUB_STEP_SUMMARY names a file — appends a
-// Markdown job summary to it (TRD §5.6). A divergence that blocks the build
+// Markdown job summary to it. A divergence that blocks the build
 // under failOn is an ::error annotation; a warn-only one is ::warning, so the
 // annotation color matches the exit code.
 func writeGitHub(w io.Writer, rep *Report, failOn string) error {

@@ -74,7 +74,7 @@ func TestReport_ExitCode_Clean(t *testing.T) {
 func TestReport_ExitCode_ClosedOnlyDivergence(t *testing.T) {
 	// sampleReport's one divergence (InvoiceFlow) is in a COMPLETED (closed)
 	// workflow — under the default fail-on=open, that's a warning, not a
-	// blocking failure (PRD open question 2).
+	// blocking failure.
 	dirty := sampleReport()
 	if got := dirty.ExitCode(FailOnOpen); got != ExitDivergenceWarn {
 		t.Errorf("expected ExitDivergenceWarn for a closed-only divergence under fail-on=open, got %d", got)

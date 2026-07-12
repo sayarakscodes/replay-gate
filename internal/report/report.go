@@ -1,4 +1,4 @@
-// Package report renders a gate.Report in one of several formats (TRD §5.6):
+// Package report renders a gate.Report in one of several formats:
 // text and json for humans/machines, github for GitHub Actions annotations +
 // job summary, and sarif for GitHub code scanning.
 package report

@@ -8,7 +8,7 @@ import (
 )
 
 // Patcher tracks changeIDs already used within one report, suffixing on
-// collision (TRD §5.5: "guaranteed unique per report via suffixing"). Package
+// collision. Package
 // Suggest is deterministic per divergence, which is right in isolation, but
 // two divergences with the same class and name in the same report — e.g. the
 // same activity renamed the same way in two different corpus entries — would

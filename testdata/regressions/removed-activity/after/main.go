@@ -1,7 +1,7 @@
 // Command after regresses "RemovedActivity" by dropping the call to
 // ActivityB — code that added or removed an activity/timer/signal on an
 // existing path is one of the most common ways to accidentally break
-// in-flight workflows (see PRD_Replay_Gate.md §1).
+// in-flight workflows.
 package main
 
 import (

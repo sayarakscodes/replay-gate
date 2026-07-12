@@ -12,16 +12,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// newReplayCmd wires Mode B (TRD §4, §14 OQ1): --registrations names a Go main
+// newReplayCmd wires the replay command: --registrations names a Go main
 // package that has already registered its workflows and calls gate.Main. This
 // command builds that package into a temporary binary and execs it, forwarding
 // its own flags and propagating the subprocess's stdout/stderr/exit code
-// unchanged. See pkg/gate/main.go for why Mode B is shaped this way.
+// unchanged. See pkg/gate/main.go for why this is shaped this way.
 //
 // We build-then-exec rather than `go run` deliberately: `go run` collapses any
 // non-zero program exit to 1, which would erase the distinction between exit 1
 // (blocking divergence), 2 (warn-only, closed histories), and 3 (operational
-// error) that the exit-code contract (TRD §5.6) depends on. A built binary
+// error) that the exit-code contract depends on. A built binary
 // preserves the exact code.
 func newReplayCmd() *cobra.Command {
 	var corpusDir, registrations, format, onUnregistered, failOn string
@@ -32,7 +32,7 @@ func newReplayCmd() *cobra.Command {
 		Short: "Replay every history in a corpus against a build and report divergences",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if registrations == "" {
-				fmt.Fprintln(cmd.ErrOrStderr(), "Error: --registrations is required: path to a Go main package that registers workflows and calls gate.Main (see TRD_Replay_Gate.md §4)")
+				fmt.Fprintln(cmd.ErrOrStderr(), "Error: --registrations is required: path to a Go main package that registers workflows and calls gate.Main")
 				os.Exit(gate.ExitOperationalError)
 			}
 

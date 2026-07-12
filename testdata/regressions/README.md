@@ -1,9 +1,9 @@
 # Regression fixture battery
 
 Six known non-determinism regression classes, each proven against a **real**
-recorded workflow history — not hand-crafted JSON. This is what backs the
-PRD's core detection-coverage metric (§7: "6/6 classes caught") and the
-false-positive guarantee (§7: "0 across a corpus of unchanged-code replays").
+recorded workflow history — not hand-crafted JSON. This backs the two core
+guarantees: every known class is caught, and unchanged code replays with zero
+false positives.
 
 ## Layout
 
@@ -12,13 +12,13 @@ Each class is a self-contained directory:
 ```
 <class>/
   corpus/           # single-entry corpus (internal/corpus format), real recorded history
-  before/main.go     # unmodified workflow — a Mode B registrations package (pkg/gate.Main)
+  before/main.go     # unmodified workflow — a registrations package calling pkg/gate.Main
   after/main.go      # the regressed workflow — same shape, same workflow type name
 ```
 
 `before/` must replay clean against `corpus/`; `after/` must diverge. Both are
-ordinary Mode B packages (see TRD_Replay_Gate.md §4, §14), so they're driven
-the same way any real user's registrations package is:
+ordinary registrations packages, driven the same way any real user's package
+is:
 
 ```
 replaygate replay --corpus testdata/regressions/removed-activity/corpus \
@@ -51,7 +51,7 @@ passes, not a coin-flip race between record and replay.
 
 Histories are recorded by actually running the `before` workflow against a
 live worker, then fetching the resulting history — the same code path the
-future sampler (issue #5) will use, not a replay-only shortcut.
+sampler uses, not a replay-only shortcut.
 
 1. Start a local dev server: `brew install temporal && temporal server start-dev --headless`
 2. Add the new class to `classes` in `tools/gen-regressions/main.go` (a `before*`

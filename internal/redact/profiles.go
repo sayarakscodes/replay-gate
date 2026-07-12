@@ -16,7 +16,7 @@ const (
 
 // NoneScrubber passes payloads through unmodified. Selecting it means
 // unredacted payload content (which can contain PII) gets written to the
-// corpus — callers must warn loudly when this is chosen (TRD §5.3, N4).
+// corpus — callers must warn loudly when this is chosen.
 type NoneScrubber struct{}
 
 func (NoneScrubber) Scrub(p *commonpb.Payload) *commonpb.Payload { return p }
@@ -74,7 +74,7 @@ func NewScrubber(profile string, key []byte) (Scrubber, error) {
 }
 
 // FieldsScrubbed describes what a profile touches, for the corpus manifest's
-// redaction.fieldsScrubbed (TRD §5.2).
+// redaction.fieldsScrubbed.
 func FieldsScrubbed(profile string) []string {
 	if profile == ProfileNone {
 		return nil

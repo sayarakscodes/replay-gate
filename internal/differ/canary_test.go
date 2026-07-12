@@ -8,13 +8,13 @@ import (
 	"github.com/sayarakscodes/replay-gate/internal/replayer"
 )
 
-// This is the SDK-drift canary (TRD §5.4): internal/regressiontest's "after"
+// This is the SDK-drift canary: internal/regressiontest's "after"
 // workflow functions are exact copies of testdata/regressions/*/after/main.go's
 // logic, replayed here against the real recorded histories committed there.
 // If a future SDK version changes the "[TMPRL1100]" message text,
 // classify.go's regex table stops matching and this test fails loudly —
 // which is the point: the differ's regex table is coupled to the pinned SDK
-// range (TRD §2, §8 risk), and this test is what notices when that coupling
+// range, and this test is what notices when that coupling
 // breaks.
 func TestCanary_RegressionBattery(t *testing.T) {
 	wantClass := map[string]differ.Class{

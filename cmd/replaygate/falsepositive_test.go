@@ -42,11 +42,11 @@ func replayJSON(t *testing.T, corpusDir, registrations string) jsonReport {
 	return rep
 }
 
-// TestFalsePositiveGuard is the PRD's other core trust guarantee (§7: "0
-// [false positives] across a corpus of unchanged-code replays") — every
-// unmodified workflow, replayed against its own recorded history, must
-// report zero failures. A failure here means the replayer itself is
-// unreliable, which is worse than a missed regression.
+// TestFalsePositiveGuard is the other core trust guarantee: zero false
+// positives across a corpus of unchanged-code replays. Every unmodified
+// workflow, replayed against its own recorded history, must report zero
+// failures. A failure here means the replayer itself is unreliable, which is
+// worse than a missed regression.
 func TestFalsePositiveGuard(t *testing.T) {
 	t.Run("fixture_corpus", func(t *testing.T) {
 		rep := replayJSON(t, "../../testdata/corpus", "../../testdata/replaymain_good")

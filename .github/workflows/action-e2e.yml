@@ -2,7 +2,7 @@
 # examples/, in both directions: the unchanged workflow must pass, and the
 # deliberately-regressed one must be caught with the expected exit code and a
 # GitHub annotation. Uses install-from=source so it runs without a published
-# release (issue #9 acceptance criteria).
+# release.
 name: Action E2E
 
 on:

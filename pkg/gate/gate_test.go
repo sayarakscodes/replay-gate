@@ -29,7 +29,7 @@ func matchingSimpleOrder(ctx workflow.Context) error {
 }
 
 // regressedSimpleOrder drops the activity call entirely — the classic "removed
-// activity on an existing code path" regression from the PRD's problem statement.
+// activity on an existing code path" regression.
 func regressedSimpleOrder(ctx workflow.Context) error {
 	return nil
 }

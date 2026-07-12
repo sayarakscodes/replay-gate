@@ -1,4 +1,4 @@
-// Command replaymain_good is a fixture Mode B registrations package, used by
+// Command replaymain_good is a fixture registrations package, used by
 // the replaygate CLI's integration test (cmd/replaygate/replay_test.go). It
 // mirrors the shape a real user's registrations package would take: register
 // workflows, then hand off to gate.Main. All three workflows here match their

@@ -1,6 +1,6 @@
 // Command after regresses "ChangedTimer" by removing the timer entirely and
 // calling the activity immediately — control flow that now skips a timer on
-// an existing code path (see PRD_Replay_Gate.md §1).
+// an existing code path.
 package main
 
 import (

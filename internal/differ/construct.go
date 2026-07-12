@@ -9,7 +9,7 @@ import (
 )
 
 // suspiciousConstructs are the non-deterministic builtins workflowcheck
-// itself flags (PRD §1: time.Now(), rand, map-range, goroutines). This is
+// itself flags: time.Now(), rand, map-range, goroutines. This is
 // deliberately a plain substring scan, not an AST pass — a cheap, best-effort
 // signal to disambiguate ClassRename from ClassNondeterministicConstruct,
 // not a replacement for workflowcheck's real static analysis.

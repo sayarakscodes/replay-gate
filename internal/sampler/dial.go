@@ -10,13 +10,13 @@ import (
 )
 
 // DialFromEnv connects to a cluster using the env vars documented in
-// TRD_Replay_Gate.md §10: TEMPORAL_ADDRESS, TEMPORAL_NAMESPACE, and either
+// : TEMPORAL_ADDRESS, TEMPORAL_NAMESPACE, and either
 // TEMPORAL_API_KEY or a TEMPORAL_TLS_CERT/TEMPORAL_TLS_KEY pair. All are
 // optional except TEMPORAL_ADDRESS; namespace defaults to "default".
 func DialFromEnv() (client.Client, string, error) {
 	address := os.Getenv("TEMPORAL_ADDRESS")
 	if address == "" {
-		return nil, "", fmt.Errorf("TEMPORAL_ADDRESS is required (see TRD_Replay_Gate.md §10)")
+		return nil, "", fmt.Errorf("TEMPORAL_ADDRESS is required")
 	}
 	namespace := os.Getenv("TEMPORAL_NAMESPACE")
 	if namespace == "" {

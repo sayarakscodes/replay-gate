@@ -8,7 +8,7 @@ import (
 	"github.com/sayarakscodes/replay-gate/internal/patcher"
 )
 
-// Process exit codes per TRD §5.6.
+// Process exit codes per.
 const (
 	ExitClean = 0
 	// ExitDivergence: a divergence exists in an open (RUNNING) workflow — or,
@@ -17,7 +17,7 @@ const (
 	ExitDivergence = 1
 	// ExitDivergenceWarn: divergences exist, but only in closed histories,
 	// under the default FailOnOpen policy — worth surfacing, not worth
-	// blocking a merge over (PRD §8 open question 2).
+	// blocking a merge over.
 	ExitDivergenceWarn   = 2
 	ExitOperationalError = 3
 )
@@ -37,7 +37,7 @@ type EntryResult struct {
 	Skipped  bool // true when excluded via an on-unregistered=skip-warn policy
 	Duration time.Duration
 	// Divergence and Patch are populated whenever Err != nil and not Skipped
-	// (F6/F4, TRD §5.4-5.5) — the differ's classification of Err, and the
+	// (F6/F4, ) — the differ's classification of Err, and the
 	// patcher's suggested fix for it. Both nil for a passing or skipped entry.
 	Divergence *differ.Divergence
 	Patch      *patcher.Patch
@@ -46,7 +46,7 @@ type EntryResult struct {
 func (r EntryResult) Passed() bool { return r.Err == nil }
 
 // Report is the outcome of replaying an entire corpus, in stable corpus-manifest
-// order regardless of which goroutine finished each entry first (N5).
+// order regardless of which goroutine finished each entry first.
 type Report struct {
 	CorpusDir     string
 	CorpusVersion string
@@ -76,7 +76,7 @@ func (r *Report) OpenDivergences() []EntryResult {
 	return out
 }
 
-// ExitCode maps the report to the process exit code contract in TRD §5.6.
+// ExitCode maps the report to the process exit code contract in.
 // failOn is FailOnOpen (default) or FailOnAny; an empty string is treated as
 // FailOnOpen. An invalid value is treated the same as FailOnOpen — ExitCode
 // has no error return, so callers that need to reject a bad flag value

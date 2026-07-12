@@ -5,7 +5,7 @@ import "math/rand"
 // reservoir implements Algorithm R: an unbiased sample of up to k items from
 // a stream of unknown length, seen one at a time, without buffering the whole
 // stream. Used to avoid biasing samples toward whichever page of results the
-// visibility API happens to return first (TRD §5.3).
+// visibility API happens to return first.
 type reservoir[T any] struct {
 	k     int
 	items []T

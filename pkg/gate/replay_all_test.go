@@ -87,7 +87,7 @@ func TestReplayAll_RegressedEntry_Divergence(t *testing.T) {
 		t.Fatalf("ReplayAll: %v", err)
 	}
 	// SimpleOrder's fixture history is COMPLETED (closed) — under the default
-	// fail-on=open this is a warning, not a blocker (PRD open question 2).
+	// fail-on=open this is a warning, not a blocker.
 	if rep.ExitCode(gate.FailOnOpen) != gate.ExitDivergenceWarn {
 		t.Fatalf("expected ExitDivergenceWarn for a closed-only divergence under fail-on=open, got %d", rep.ExitCode(gate.FailOnOpen))
 	}

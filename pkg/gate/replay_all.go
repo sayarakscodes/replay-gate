@@ -13,7 +13,7 @@ import (
 )
 
 // Behavior for corpus entries whose workflow type has no matching registration
-// (TRD §9): the default is a hard failure, since a silently skipped history is a
+// : the default is a hard failure, since a silently skipped history is a
 // coverage hole, not a clean result.
 const (
 	OnUnregisteredFail     = "fail"
@@ -21,14 +21,14 @@ const (
 )
 
 // FailOn selects which divergences block (ExitDivergence) vs warn
-// (ExitDivergenceWarn) — re-exported from internal/report (TRD §5.6, PRD OQ2).
+// (ExitDivergenceWarn) — re-exported from internal/report.
 const (
 	FailOnOpen = report.FailOnOpen
 	FailOnAny  = report.FailOnAny
 )
 
 // Process exit codes, re-exported from internal/report for callers of this
-// package (TRD §5.6).
+// package.
 const (
 	ExitClean            = report.ExitClean
 	ExitDivergence       = report.ExitDivergence

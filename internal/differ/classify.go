@@ -11,12 +11,11 @@ import (
 // Every regex here is anchored to a "[TMPRL1100]" message template found in
 // go.temporal.io/sdk's internal/internal_task_handlers.go and
 // internal/internal_command_state_machine.go. They are inherently coupled to
-// the SDK's exact wording (TRD §8 risk) — see this package's canary test,
+// the SDK's exact wording — see this package's canary test,
 // which fails loudly if a newer SDK changes any of this text.
 //
-// Verified version floor (TRD §14, corrected from an initial 1.25 assumption
-// — see issue #7): the "[TMPRL1100]" marker itself was only added in SDK
-// v1.26.0 (absent at v1.25.0, same wording otherwise); reExpectedAtPosition's
+// Verified version floor: the "[TMPRL1100]" marker itself was only added in
+// SDK v1.26.0 (absent at v1.25.0, same wording otherwise); reExpectedAtPosition's
 // template was only added in v1.34.0 (older versions hit a different,
 // unhandled message for that case — the divergence is still *detected*,
 // just classified as ClassUnknown instead of ClassRemoved on SDK < 1.34).

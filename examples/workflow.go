@@ -1,7 +1,7 @@
 // Package examples is a minimal Temporal worker demonstrating Replay Gate
 // integration. OrderWorkflow is the workflow under test; examples/corpus holds
-// a real recorded history of it, and examples/replaygate is the Mode B
-// registrations package the GitHub Action (action/action.yml) replays.
+// a real recorded history of it, and examples/replaygate is the registrations
+// package the GitHub Action (action/action.yml) replays.
 package examples
 
 import (

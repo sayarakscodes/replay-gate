@@ -1,4 +1,4 @@
-// Command replaygate is the CLI entrypoint; subcommands are added incrementally per milestone (see TRD_Replay_Gate.md).
+// Command replaygate is the CLI entrypoint for the verify, replay, and sample subcommands.
 package main
 
 import (

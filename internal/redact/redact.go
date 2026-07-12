@@ -1,4 +1,4 @@
-// Package redact implements payload redaction (F4/N4 in the PRD): scrubbing
+// Package redact implements payload redaction: scrubbing
 // activity/workflow/signal payload bytes before a history is ever persisted
 // to a corpus, since histories sampled from a live cluster can contain PII.
 package redact

@@ -1,6 +1,6 @@
 // Command after regresses "TimeNowRegression" by branching directly on
 // time.Now() instead of the deterministic workflow.Now(ctx) — a classic
-// injected non-deterministic construct (PRD_Replay_Gate.md §1). The cutoff
+// injected non-deterministic construct. The cutoff
 // is hardcoded in the past on purpose: it's already elapsed by the time this
 // code can possibly run, so the branch flips to ProcessOrderV2 for every
 // replay, deterministically, without depending on real wall-clock timing at

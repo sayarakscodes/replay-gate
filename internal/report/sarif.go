@@ -94,8 +94,8 @@ func writeSARIF(w io.Writer, rep *Report, failOn string) error {
 			Level:   level,
 			Message: sarifText{Text: sarifMessage(r)},
 			// Divergences aren't tied to a source line (the patcher doesn't
-			// locate source — TRD §5.5), so we anchor the result at the corpus
-			// history file, which is a real, inspectable artifact.
+			// locate source), so we anchor the result at the corpus history
+			// file, which is a real, inspectable artifact.
 			Locations: []sarifLocation{{
 				PhysicalLocation: sarifPhysicalLocation{
 					ArtifactLocation: sarifArtifactLocation{URI: historyURI(rep, r)},

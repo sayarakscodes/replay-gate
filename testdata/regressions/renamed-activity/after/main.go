@@ -1,7 +1,7 @@
 // Command after regresses "RenamedActivity" by calling the same logic under
 // a renamed activity type — renaming an activity type is deterministic in
 // isolation but breaks in-flight workflows whose recorded history references
-// the old name (see PRD_Replay_Gate.md §1).
+// the old name.
 package main
 
 import (
